@@ -1,7 +1,10 @@
 // Pure domain core (ADR-010). No I/O, no network, no model SDKs, no database.
-// Selection, risk rules and the compiler arrive in M1/M4.
-
-export const SCHEMA_VERSION = '0.1.0';
-export const PLATFORM_PHASE = 'P0';
-export const EVIDENCE_STATES = ['CONFIRMED', 'OBSERVED', 'INFERRED', 'ASSUMED', 'UNVERIFIED', 'BLOCKED'] as const;
-export type EvidenceState = (typeof EVIDENCE_STATES)[number];
+export { SCHEMA_VERSION, PLATFORM_PHASE, COMPILER_VERSION, RISK_RULESET_VERSION, EVIDENCE_STATES } from './types.ts';
+export type { EvidenceState, Profile, CompileRequest, CompileResult, IntakeForm, Artifact, SelectionResult } from './types.ts';
+export { validateProfile } from './validate-profile.ts';
+export { classifyRisk } from './classify-risk.ts';
+export { selectModules } from './select-modules.ts';
+export { buildProfile, deriveName } from './profile-from-idea.ts';
+export { compileProjectOs, renderUntrusted } from './compile.ts';
+export { buildZip, zipFileNames } from './zip.ts';
+export { runCompile, zipCompile } from './run-compile.ts';

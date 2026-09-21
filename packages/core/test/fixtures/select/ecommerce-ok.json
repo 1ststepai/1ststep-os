@@ -1,0 +1,25 @@
+{
+  "idea": "A shop that sells coffee beans online.",
+  "form": {
+    "name": "Bean Shop",
+    "productTypes": ["ECOMMERCE"],
+    "platformTargets": ["WEB"],
+    "paymentsNeeded": true,
+    "authNeeded": true,
+    "usesAI": false
+  },
+  "expected": {
+    "selected": [
+      ["business-intelligence", "RULE_MATCH"],
+      ["core", "ALWAYS"],
+      ["ecommerce", "RULE_MATCH"],
+      ["growth", "RULE_MATCH"],
+      ["operations", "RULE_MATCH"],
+      ["payments", "RULE_MATCH"],
+      ["premium-ux", "RULE_MATCH"],
+      ["web-saas", "RULE_MATCH"]
+    ],
+    "deferred": [],
+    "decisionCodes": []
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "idea": "A desktop markdown editor for writers.",
+  "form": {
+    "name": "Inkdesk",
+    "productTypes": ["DESKTOP_APP"],
+    "platformTargets": ["MACOS", "WINDOWS"],
+    "paymentsNeeded": false,
+    "authNeeded": false,
+    "usesAI": false
+  },
+  "expected": {
+    "selected": [
+      ["business-intelligence", "RULE_MATCH"],
+      ["core", "ALWAYS"],
+      ["growth", "RULE_MATCH"],
+      ["premium-ux", "RULE_MATCH"]
+    ],
+    "deferred": [["desktop", "PHASE_NOT_AVAILABLE"]],
+    "decisionCodes": []
+  }
+}

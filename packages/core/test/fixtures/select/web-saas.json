@@ -1,0 +1,23 @@
+{
+  "idea": "A web app for neighbourhood book clubs.",
+  "form": {
+    "name": "Book Club",
+    "productTypes": ["WEB_SAAS"],
+    "platformTargets": ["WEB"],
+    "paymentsNeeded": false,
+    "authNeeded": true,
+    "usesAI": false
+  },
+  "expected": {
+    "selected": [
+      ["business-intelligence", "RULE_MATCH"],
+      ["core", "ALWAYS"],
+      ["growth", "RULE_MATCH"],
+      ["operations", "RULE_MATCH"],
+      ["premium-ux", "RULE_MATCH"],
+      ["web-saas", "RULE_MATCH"]
+    ],
+    "deferred": [],
+    "decisionCodes": []
+  }
+}

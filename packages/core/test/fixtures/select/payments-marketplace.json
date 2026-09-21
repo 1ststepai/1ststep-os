@@ -1,0 +1,25 @@
+{
+  "idea": "Neighbours book trusted pet sitters and pay in the app.",
+  "form": {
+    "name": "Pet Sit",
+    "productTypes": ["MARKETPLACE"],
+    "platformTargets": ["WEB", "IOS"],
+    "paymentsNeeded": true,
+    "authNeeded": true,
+    "usesAI": false
+  },
+  "expected": {
+    "selected": [
+      ["business-intelligence", "RULE_MATCH"],
+      ["core", "ALWAYS"],
+      ["growth", "RULE_MATCH"],
+      ["mobile", "RULE_MATCH"],
+      ["operations", "RULE_MATCH"],
+      ["payments", "RULE_MATCH"],
+      ["premium-ux", "RULE_MATCH"],
+      ["web-saas", "RULE_MATCH"]
+    ],
+    "deferred": [],
+    "decisionCodes": []
+  }
+}

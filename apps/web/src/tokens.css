@@ -1,25 +1,189 @@
-/* Placeholder semantic tokens. Canonical tokens.json + generator arrive in M7 (ADR-013 §2). */
+/* Cycle 1 tokens. Canonical tokens.json + generator arrive in M7 (ADR-013 §2). */
 :root {
-  --color-surface: #fbfaf8;
+  --color-surface: #f7f4ee;
+  --color-surface-raised: #fffcf7;
   --color-text: #1c1b19;
-  --color-text-muted: #5f5b55;
+  --color-text-muted: #5c574f;
+  --color-accent: #1f4d3a;
+  --color-accent-hover: #16382a;
+  --color-border: #d9d1c3;
+  --color-error: #8b1e1e;
+  --color-error-bg: #f8eaea;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
   --space-4: 1rem;
-  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --space-5: 1.5rem;
+  --radius: 0.75rem;
+  --font-body: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-ui: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
+
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--color-surface);
   color: var(--color-text);
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
+  line-height: 1.5;
 }
 
 .shell {
-  max-width: 40rem;
+  max-width: 42rem;
   margin: 0 auto;
-  padding: calc(var(--space-4) * 4) var(--space-4);
+  padding: calc(var(--space-4) * 3) var(--space-4) calc(var(--space-4) * 6);
 }
 
-.shell p {
+.kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-text-muted);
+  margin: 0 0 var(--space-2);
+}
+
+h1 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.2;
+  margin: 0 0 var(--space-3);
+}
+
+.lede, .fine {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-5);
+}
+
+.fine { font-size: 0.9rem; }
+
+.panel {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+label, .legend {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.hint {
+  display: block;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.15rem;
+}
+
+textarea, input, select {
+  width: 100%;
+  font: inherit;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: #fff;
+  color: inherit;
+}
+
+textarea { min-height: 8rem; resize: vertical; }
+
+textarea:focus, input:focus, select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .grid.two { grid-template-columns: 1fr 1fr; }
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: var(--space-3) 0 0;
+}
+
+.checks label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.checks input { width: auto; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+button.primary {
+  background: var(--color-accent);
+  color: #f7f4ee;
+}
+
+button.primary:hover { background: var(--color-accent-hover); }
+button.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+button.ghost {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.error {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border-radius: 0.5rem;
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.modules, .files {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.modules li, .files li {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.result h2 {
+  font-size: 1.1rem;
+  margin: 0 0 var(--space-2);
 }

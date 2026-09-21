@@ -22,6 +22,9 @@
 6. Read `state/CURRENT_STATE.md` and `state/NEXT_ACTIONS.md`
 7. Start the next cycle from `prompts/NEXT_CYCLE_TEMPLATE.md` and the latest handoff in `handoffs/`.
 
-Checks: `npm install` then `npm run check`.
+Checks: `npm install` then `npm test` (includes `npm run check`).
+
+Cycle 1 local demo: `npm run build && npm start`, then open `/os`. Paste an idea, compile, download a markdown ZIP. No model is called.
+
 
 `FILE_INDEX.md` lists every file.

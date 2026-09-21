@@ -1,0 +1,24 @@
+{
+  "idea": "A shop that sells coffee beans online without taking payment in-app.",
+  "form": {
+    "name": "Bean Shop Free",
+    "productTypes": ["ECOMMERCE"],
+    "platformTargets": ["WEB"],
+    "paymentsNeeded": false,
+    "authNeeded": true,
+    "usesAI": false
+  },
+  "expected": {
+    "selected": [
+      ["business-intelligence", "RULE_MATCH"],
+      ["core", "ALWAYS"],
+      ["growth", "RULE_MATCH"],
+      ["operations", "RULE_MATCH"],
+      ["premium-ux", "RULE_MATCH"],
+      ["web-saas", "RULE_MATCH"]
+    ],
+    "deferred": [],
+    "decisionCodes": [["payments", "DEPENDENCY_CONTRADICTS_PROFILE"]],
+    "error": "DEPENDENCY_CONTRADICTS_PROFILE"
+  }
+}
