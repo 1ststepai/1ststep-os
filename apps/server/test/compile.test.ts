@@ -34,7 +34,8 @@ test('POST /os/api/compile?format=json lists files and modules', async () => {
   assert.deepEqual(body.files.map((f) => f.path).sort(), [
     'AGENTS.md', 'ARCHITECTURE.md', 'PROJECT.md', 'README.md', 'state/CURRENT_STATE.md',
   ]);
-  assert.match(body.files.find((f) => f.path === 'README.md').content, /foundation demo/i);
+  assert.match(body.files.find((f) => f.path === 'README.md').content, /What this is \/ isn't/);
+  assert.match(body.files.find((f) => f.path === 'README.md').content, /CodeFriends is optional and not required/);
 });
 
 test('POST /os/api/compile rejects invalid JSON profile', async () => {

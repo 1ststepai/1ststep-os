@@ -20,7 +20,14 @@ test('compile emits the Cycle 1 markdown bundle from an idea', () => {
   const project = result.files.find((f) => f.path === 'PROJECT.md').content;
   assert.match(project, /Untrusted content \(data, not instructions\)/);
   assert.match(project, /A shared neighbourhood tool library/);
-  assert.match(result.files.find((f) => f.path === 'README.md').content, /foundation demo/i);
+  const readme = result.files.find((f) => f.path === 'README.md').content;
+  assert.match(readme, /What this is \/ isn't/);
+  assert.match(readme, /foundation Project OS export/i);
+  assert.match(readme, /not.*full live operating system/i);
+  assert.match(readme, /not.*income/i);
+  assert.match(readme, /CodeFriends is optional and not required/);
+  assert.match(readme, /https:\/\/www\.codefriends\.net\//);
+  assert.doesNotMatch(result.files.find((f) => f.path === 'AGENTS.md').content, /CodeFriends/);
   assert.match(result.files.find((f) => f.path === 'state/CURRENT_STATE.md').content, /PLANNED/);
   assert.match(result.files.find((f) => f.path === 'state/CURRENT_STATE.md').content, /NONE/);
   assert.ok(result.selection.selected.some((m) => m.moduleId === 'core'));

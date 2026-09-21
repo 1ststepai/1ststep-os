@@ -14,7 +14,7 @@
   - `packages/core`: `validateProfile`, `classifyRisk` (ruleset 0.1.0), `selectModules`, deterministic compiler (five markdown files + STORE ZIP). No I/O, no model SDK.
   - `apps/server`: `GET /os/api/healthz`, `POST /os/api/compile` (ZIP or JSON listing). No auth (M2).
   - `apps/web`: `/os` Cycle 1 demo — idea or short profile → compile → download ZIP. Honest copy: foundation demo, not the full OS.
-- **Cycle 1 slice:** idea/profile in → selected modules → markdown bundle ZIP out. Deterministic only. No research, no recommendations, no adapters, no publish.
+- **Cycle 1 slice:** idea/profile in → selected modules → markdown bundle ZIP out. Deterministic only. No research, no recommendations, no adapters, no publish. Generated README states what the export is / isn't (not a live OS, not guaranteed income) and includes an optional, non-required CodeFriends line.
 - **Production state:** NONE. Nothing deployed; not production-ready.
 - **External integrations:** NONE
 - **Open findings:** F-0019, F-0023, F-0025 (none HIGH/CRITICAL). F-0020 addressed when empty update zips were dropped on main.
