@@ -62,7 +62,7 @@ Use it as a starting stub. Confirm every ASSUMED field before treating these fil
 
 Open \`AGENTS.md\` and \`PROJECT.md\` in any coding agent.
 
-If you want a beginner-friendly place to keep learning, CodeFriends is optional and not required to use this bundle: https://www.codefriends.net/
+If you want a beginner-friendly place to keep learning, CodeFriends is optional and not required to use this bundle: https://codefriends.1ststep.ai/
 `;
 
   const project = `# Project — ${name}

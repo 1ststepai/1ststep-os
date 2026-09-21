@@ -26,7 +26,8 @@ test('compile emits the Cycle 1 markdown bundle from an idea', () => {
   assert.match(readme, /not.*full live operating system/i);
   assert.match(readme, /not.*income/i);
   assert.match(readme, /CodeFriends is optional and not required/);
-  assert.match(readme, /https:\/\/www\.codefriends\.net\//);
+  assert.match(readme, /https:\/\/codefriends\.1ststep\.ai\//);
+  assert.doesNotMatch(readme, /codefriends\.net/);
   assert.doesNotMatch(result.files.find((f) => f.path === 'AGENTS.md').content, /CodeFriends/);
   assert.match(result.files.find((f) => f.path === 'state/CURRENT_STATE.md').content, /PLANNED/);
   assert.match(result.files.find((f) => f.path === 'state/CURRENT_STATE.md').content, /NONE/);

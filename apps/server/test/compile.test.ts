@@ -36,6 +36,8 @@ test('POST /os/api/compile?format=json lists files and modules', async () => {
   ]);
   assert.match(body.files.find((f) => f.path === 'README.md').content, /What this is \/ isn't/);
   assert.match(body.files.find((f) => f.path === 'README.md').content, /CodeFriends is optional and not required/);
+  assert.match(body.files.find((f) => f.path === 'README.md').content, /https:\/\/codefriends\.1ststep\.ai\//);
+  assert.doesNotMatch(body.files.find((f) => f.path === 'README.md').content, /codefriends\.net/);
 });
 
 test('POST /os/api/compile rejects invalid JSON profile', async () => {
