@@ -2,20 +2,21 @@
 
 - **Product:** 1stStep OS
 - **Phase:** 0 — Foundation
-- **Status:** CYCLE_0_COMPLETE (2026-09-13)
+- **Status:** CYCLE_1_THIN_VERTICAL (2026-09-21)
 - **Local path:** `C:\Users\evanp\Documents\Claude\Projects\1stStep OS`
 - **Public path:** `1ststep.ai/os`
 - **G0 Intake:** PASS (`gates/results/G0-2026-09-13-cycle0.json`), product-owner ratification PENDING
 - **G1 Architecture:** PASS (`gates/results/G1-2026-09-13-cycle0.json`), product-owner ratification PENDING
 - **Architecture:** ACCEPTED: ADR-010 (application), ADR-012 incl. Amendment A (AI runtime, cost harness, Universal LLM), ADR-013 (premium experience), ADR-014 (capabilities, Media Factory, Automation, Business Owner Mode)
 - **Canonical schemas:** 0.1.0 (20 schema files), checked by `npm run check`
-- **Registries:** 301 capabilities, 22 modules
-- **Application scaffold:** SCAFFOLDED
-  - npm workspaces: `apps/server` (Hono, `/os/api/healthz`), `apps/web` (React + Vite shell at `/os`), `packages/core` (pure, boundary-tested)
-  - No product features
-- **Implementation stack:** decided (ADR-010); hosting, search, email, identity sharing and error tracking still OPEN (OD-1..OD-11)
+- **Registries:** 301 capabilities, 22 modules (unchanged in Cycle 1)
+- **Application:**
+  - `packages/core`: `validateProfile`, `classifyRisk` (ruleset 0.1.0), `selectModules`, deterministic compiler (five markdown files + STORE ZIP). No I/O, no model SDK.
+  - `apps/server`: `GET /os/api/healthz`, `POST /os/api/compile` (ZIP or JSON listing). No auth (M2).
+  - `apps/web`: `/os` Cycle 1 demo — idea or short profile → compile → download ZIP. Honest copy: foundation demo, not the full OS.
+- **Cycle 1 slice:** idea/profile in → selected modules → markdown bundle ZIP out. Deterministic only. No research, no recommendations, no adapters, no publish.
 - **Production state:** NONE. Nothing deployed; not production-ready.
-- **External integrations:** NONE (no connectors, no web research, no posting, submissions, accounts, billing or voice cloning)
-- **Open findings:** F-0019, F-0020, F-0023, F-0025 (none HIGH/CRITICAL)
-- **Latest handoff:** `handoffs/2026-09-13-cycle0.md`
-- **Next action:** owner ratification + OD-8 (version control), then Cycle 1 = M1 Core domain engine (`state/NEXT_ACTIONS.md`)
+- **External integrations:** NONE
+- **Open findings:** F-0019, F-0023, F-0025 (none HIGH/CRITICAL). F-0020 addressed when empty update zips were dropped on main.
+- **Latest handoff:** `handoffs/2026-09-21-cycle1.md`
+- **Next action:** remaining M1 depth (full 22-module goldens, `packages/schemas`) or M2 platform skeleton — `state/NEXT_ACTIONS.md`

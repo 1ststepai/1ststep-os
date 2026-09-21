@@ -1,8 +1,11 @@
 # 1stStep OS File Index
 
 Every file in the repository (excluding `node_modules/`, `dist/` and `package-lock.json`). Verified by `npm run check`.
-Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0.
+Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0, plus the Cycle 1 thin vertical.
 
+- `.claude/skills/auto-model-router/SKILL.md`
+- `.codex/skills/auto-model-router/SKILL.md`
+- `.cursor/skills/auto-model-router/SKILL.md`
 - `.gitignore`
 - `.project-os/capability-taxonomy.json`
 - `.project-os/manifest.json`
@@ -12,28 +15,6 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `.project-os/state.json`
 - `.project-os/universal-llm-policy.json`
 - `AGENTS.md`
-- `AI_RUNTIME_OS.md`
-- `APPLY_THIS_UPDATE.md`
-- `ARCHITECTURE.md`
-- `CLAUDE.md`
-- `COST_REVIEW_GATE.md`
-- `DATA_MODEL.md`
-- `DECISIONS.md`
-- `DESIGN_REVIEW_GATE.md`
-- `EVERYTHING_OS.md`
-- `EXTERNAL_ACTIONS.md`
-- `FILE_INDEX.md`
-- `FRONTEND_QUALITY.md`
-- `GENERATION_CONTRACT.md`
-- `MOTION_AND_ANIMATION.md`
-- `PREMIUM_EXPERIENCE_OS.md`
-- `PRODUCT_REQUIREMENTS.md`
-- `PROJECT.md`
-- `README.md`
-- `RESEARCH_POLICY.md`
-- `SCHEMAS.md`
-- `SECURITY.md`
-- `UX.md`
 - `agents/ai-agent.md`
 - `agents/analytics-agent.md`
 - `agents/architect-agent.md`
@@ -59,6 +40,7 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `agents/security-agent.md`
 - `agents/seo-agent.md`
 - `agents/social-agent.md`
+- `AI_RUNTIME_OS.md`
 - `ai-runtime/AI_OBSERVABILITY.md`
 - `ai-runtime/CLAUDE_CODE.md`
 - `ai-runtime/CODING_AGENT_HARNESS.md`
@@ -71,9 +53,11 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `ai-runtime/RETRY_FALLBACK.md`
 - `ai-runtime/TOKEN_HARNESS.md`
 - `app-dev/PLATFORM_MATRIX.md`
+- `APPLY_THIS_UPDATE.md`
 - `apps/server/package.json`
 - `apps/server/src/app.ts`
 - `apps/server/src/server.ts`
+- `apps/server/test/compile.test.ts`
 - `apps/server/test/health.test.ts`
 - `apps/web/index.html`
 - `apps/web/package.json`
@@ -81,15 +65,17 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `apps/web/src/tokens.css`
 - `apps/web/tsconfig.json`
 - `apps/web/vite.config.ts`
+- `ARCHITECTURE.md`
 - `architecture/decisions/ADR-010-mvp-application-architecture.md`
 - `architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md`
 - `architecture/decisions/ADR-013-premium-experience-architecture.md`
 - `architecture/decisions/ADR-014-capabilities-media-automation-business-owner.md`
 - `audit/2026-09-13-cycle0-reconciliation.md`
+- `audit/findings.json`
 - `audit/PROVIDER_FAILOVER.md`
 - `audit/PROVIDER_POLICY.md`
 - `audit/UNIVERSAL_AGENT_AUDIT.md`
-- `audit/findings.json`
+- `AUTO_MODEL_ROUTER.md`
 - `automation/AUTOMATION_ENGINE.md`
 - `business/COMPETITOR_INTELLIGENCE.md`
 - `business/PRICING_AND_MONETIZATION.md`
@@ -133,9 +119,9 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `capabilities/audio/SPEECH_TO_TEXT.md`
 - `capabilities/audio/TEXT_TO_SPEECH.md`
 - `capabilities/audio/TRANSCRIPTION.md`
-- `capabilities/audio/VOICEOVER.md`
 - `capabilities/audio/VOICE_CLONING.md`
 - `capabilities/audio/VOICE_CONSENT.md`
+- `capabilities/audio/VOICEOVER.md`
 - `capabilities/automation/APPROVAL_WORKFLOWS.md`
 - `capabilities/automation/CRM_AUTOMATION.md`
 - `capabilities/automation/DATA_SYNC.md`
@@ -395,10 +381,19 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `capabilities/video/TUTORIAL_VIDEO.md`
 - `capabilities/video/VIDEO_EDITING.md`
 - `capabilities/video/VIDEO_STRATEGY.md`
+- `CLAUDE.md`
+- `COST_REVIEW_GATE.md`
+- `DATA_MODEL.md`
+- `DECISIONS.md`
+- `DESIGN_REVIEW_GATE.md`
 - `domains/BUSINESS_INTELLIGENCE_OS.md`
 - `domains/ENGINEERING_OS.md`
 - `domains/GROWTH_OS.md`
 - `domains/OPERATIONS_OS.md`
+- `EVERYTHING_OS.md`
+- `EXTERNAL_ACTIONS.md`
+- `FILE_INDEX.md`
+- `FRONTEND_QUALITY.md`
 - `gates/G0-intake.md`
 - `gates/G1-architecture.md`
 - `gates/G2-implementation.md`
@@ -409,6 +404,7 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `gates/G7-post-release.md`
 - `gates/results/G0-2026-09-13-cycle0.json`
 - `gates/results/G1-2026-09-13-cycle0.json`
+- `GENERATION_CONTRACT.md`
 - `governance/HUMAN_CONTROL.md`
 - `growth/CONVERSION.md`
 - `growth/DISTRIBUTION.md`
@@ -417,10 +413,13 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `growth/SOCIALS.md`
 - `handoffs/2026-09-13-cycle0.json`
 - `handoffs/2026-09-13-cycle0.md`
+- `handoffs/2026-09-21-cycle1.json`
+- `handoffs/2026-09-21-cycle1.md`
 - `media/MEDIA_FACTORY.md`
 - `media/VIDEO_PIPELINE.md`
 - `media/VOICE_IDENTITY_SAFETY.md`
 - `modules/registry.json`
+- `MOTION_AND_ANIMATION.md`
 - `operations/BUSINESS_OWNER_MODE.md`
 - `os/ai/AI_PORTABILITY.md`
 - `os/ai/BYO_LLM.md`
@@ -431,16 +430,40 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `os/ai/UNIVERSAL_LLM_OS.md`
 - `package.json`
 - `packages/core/package.json`
+- `packages/core/src/assessments.ts`
+- `packages/core/src/classify-risk.ts`
+- `packages/core/src/compile.ts`
 - `packages/core/src/index.ts`
+- `packages/core/src/profile-from-idea.ts`
+- `packages/core/src/run-compile.ts`
+- `packages/core/src/select-modules.ts`
+- `packages/core/src/types.ts`
+- `packages/core/src/validate-profile.ts`
+- `packages/core/src/zip.ts`
 - `packages/core/test/boundary.test.mjs`
+- `packages/core/test/compile.test.mjs`
+- `packages/core/test/fixtures/select/ai-app.json`
+- `packages/core/test/fixtures/select/desktop-p1.json`
+- `packages/core/test/fixtures/select/ecommerce-no-pay.json`
+- `packages/core/test/fixtures/select/ecommerce-ok.json`
+- `packages/core/test/fixtures/select/payments-marketplace.json`
+- `packages/core/test/fixtures/select/web-saas.json`
+- `packages/core/test/select-modules.test.mjs`
+- `packages/core/test/validate-profile.test.mjs`
 - `plan/MVP_MILESTONES.md`
 - `plan/SCOPE.md`
+- `PREMIUM_EXPERIENCE_OS.md`
+- `PRODUCT_REQUIREMENTS.md`
+- `PROJECT.md`
 - `prompts/CLAUDE_BOOTSTRAP.md`
 - `prompts/CLAUDE_CYCLE0_ADDENDUM.md`
 - `prompts/CLAUDE_EVERYTHING_LAYER.md`
 - `prompts/CLAUDE_INTEGRATE_UNIVERSAL_LLM.md`
 - `prompts/CODEX_UPDATE_OS_SITE_PROVIDER_NEUTRAL.md`
 - `prompts/NEXT_CYCLE_TEMPLATE.md`
+- `README.md`
+- `RESEARCH_POLICY.md`
+- `SCHEMAS.md`
 - `schemas/0.1.0/automation-definition.schema.json`
 - `schemas/0.1.0/capability-definition.schema.json`
 - `schemas/0.1.0/capability-registry.schema.json`
@@ -476,6 +499,7 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `schemas/0.1.0/recommendation.schema.json`
 - `schemas/0.1.0/research-claim.schema.json`
 - `schemas/0.1.0/tool-provider.schema.json`
+- `SECURITY.md`
 - `site/AI_PROVIDER_ANIMATION.md`
 - `site/AI_PROVIDER_NEUTRAL_POSITIONING.md`
 - `state/BLOCKERS.md`
@@ -490,6 +514,7 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `tools/build-capability-registry.mjs`
 - `tools/spec.test.mjs`
 - `tsconfig.base.json`
+- `UX.md`
 - `workflows/external-action.md`
 - `workflows/feature-development.md`
 - `workflows/os-update.md`
@@ -497,10 +522,3 @@ Includes the Everything Layer and Universal LLM Addendum files merged in Cycle 0
 - `workflows/project-recovery.md`
 - `workflows/release.md`
 - `workflows/research.md`
-
-## Auto model router (added 2026-09-20)
-
-- `.claude/skills/auto-model-router/SKILL.md`
-- `.codex/skills/auto-model-router/SKILL.md`
-- `.cursor/skills/auto-model-router/SKILL.md`
-- `AUTO_MODEL_ROUTER.md`

@@ -1,10 +1,10 @@
 {
   "phase": 0,
-  "status": "CYCLE_0_COMPLETE",
+  "status": "CYCLE_1_THIN_VERTICAL",
   "gates": { "G0": "PASS", "G1": "PASS" },
   "ratification": "PENDING",
   "stack": "ADR-010 ACCEPTED",
-  "scaffold": "SCAFFOLDED",
+  "scaffold": "CYCLE_1_COMPILE_PATH",
   "production": "NONE",
-  "latestHandoff": "handoffs/2026-09-13-cycle0.md"
+  "latestHandoff": "handoffs/2026-09-21-cycle1.md"
 }
