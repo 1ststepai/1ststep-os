@@ -1,0 +1,22 @@
+{
+  "kind": "LLMConnection",
+  "schemaVersion": "0.1.0",
+  "id": "conn_example_gateway",
+  "organizationId": "org_example",
+  "scope": { "level": "ORGANIZATION", "ref": "org_example" },
+  "name": "Company LLM gateway (fixture)",
+  "connectionType": "OPENAI_COMPATIBLE",
+  "provider": "example-gateway",
+  "endpoint": { "baseUrl": "https://llm-gateway.example.com/v1", "networkZone": "PUBLIC_INTERNET" },
+  "runtimeMode": "CLOUD_HOSTED_1STSTEP",
+  "auth": { "method": "API_KEY", "secretRef": "secret://org_example/llm-gateway" },
+  "status": "ACTIVE",
+  "connectionTest": { "result": "PASS", "at": "2026-09-02T12:00:00Z", "latencyMs": 420 },
+  "discoveredModelIds": ["example-model-small", "example-model-large"],
+  "modelAllowlist": ["example-model-small"],
+  "privacyClassification": "PROJECT_PRIVATE",
+  "costMetadata": { "status": "UNKNOWN" },
+  "rateLimitMetadata": { "status": "UNKNOWN" },
+  "createdBy": { "actorType": "USER", "actorId": "user_example" },
+  "createdAt": "2026-09-02T11:55:00Z"
+}

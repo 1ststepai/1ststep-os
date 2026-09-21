@@ -1,0 +1,33 @@
+{
+  "kind": "ToolProvider",
+  "schemaVersion": "0.1.0",
+  "id": "tool_example_template_renderer",
+  "name": "Local HTML template renderer (fixture)",
+  "capabilityIds": ["image.og_images", "image.social_graphics"],
+  "providerType": "DETERMINISTIC_LOCAL",
+  "routingClass": 1,
+  "automationLevel": "AUTOMATED",
+  "licensing": {
+    "license": { "status": "UNKNOWN" },
+    "commercialUse": { "status": "UNKNOWN" },
+    "outputOwnership": { "status": "KNOWN", "value": "Output is produced from the project's own brand assets.", "evidence": "ASSUMED", "source": "DEFAULTED" }
+  },
+  "privacy": {
+    "dataRetention": { "status": "KNOWN", "value": "Runs locally; no third-party retention.", "evidence": "ASSUMED", "source": "DEFAULTED" },
+    "trainsOnCustomerData": { "status": "KNOWN", "value": false, "evidence": "ASSUMED", "source": "DEFAULTED" },
+    "dataRegions": { "status": "NOT_APPLICABLE" },
+    "dpaAvailable": { "status": "NOT_APPLICABLE" }
+  },
+  "pricing": { "basis": { "status": "KNOWN", "value": "FREE", "evidence": "ASSUMED", "source": "DEFAULTED" }, "details": { "status": "UNKNOWN" } },
+  "auth": { "method": "NONE", "scopesRequested": [] },
+  "externalActionScopes": [],
+  "latency": { "status": "UNKNOWN" },
+  "reliability": { "status": "UNKNOWN" },
+  "lockIn": { "status": "KNOWN", "value": "None; templates are project files.", "evidence": "ASSUMED", "source": "DEFAULTED" },
+  "migrationPath": { "status": "UNKNOWN" },
+  "strengths": ["Deterministic", "Brand-consistent"],
+  "weaknesses": ["No generative imagery"],
+  "fallbackToolIds": [],
+  "lastVerified": { "status": "UNKNOWN" },
+  "evidence": "ASSUMED"
+}

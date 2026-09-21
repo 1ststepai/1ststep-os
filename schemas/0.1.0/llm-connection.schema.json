@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/llm-connection.schema.json",
+  "title": "LLMConnection",
+  "description": "Bring-your-own LLM connection (os/ai/BYO_LLM.md). Secrets are never stored here: only an opaque secret-store reference. Cloud-hosted 1stStep OS may only call public https endpoints; private-network and localhost endpoints require self-hosted 1stStep OS or a local agent runner (SSRF boundary).",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "organizationId", "scope", "name", "connectionType", "provider", "endpoint",
+    "runtimeMode", "auth", "status", "modelAllowlist", "privacyClassification", "costMetadata", "rateLimitMetadata", "createdBy", "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "LLMConnection" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "organizationId": { "$ref": "common.schema.json#/$defs/id" },
+    "scope": {
+      "type": "object",
+      "required": ["level", "ref"],
+      "properties": {
+        "level": { "enum": ["ORGANIZATION", "PROJECT"] },
+        "ref": { "$ref": "common.schema.json#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "connectionType": {
+      "enum": ["PROVIDER_API_KEY", "ENTERPRISE_GATEWAY", "OPENAI_COMPATIBLE", "ANTHROPIC_COMPATIBLE", "CLOUD_MODEL_PLATFORM", "LOCAL_SERVER", "SELF_HOSTED_ENDPOINT", "CUSTOM_ADAPTER"]
+    },
+    "provider": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "endpoint": {
+      "type": "object",
+      "required": ["baseUrl", "networkZone"],
+      "properties": {
+        "baseUrl": { "type": "string", "format": "uri", "maxLength": 500 },
+        "networkZone": { "enum": ["PUBLIC_INTERNET", "PRIVATE_NETWORK", "LOCALHOST"] }
+      },
+      "additionalProperties": false
+    },
+    "runtimeMode": { "enum": ["CLOUD_HOSTED_1STSTEP", "SELF_HOSTED_1STSTEP", "LOCAL_AGENT_RUNNER"] },
+    "auth": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": { "enum": ["API_KEY", "OAUTH2", "SERVICE_ACCOUNT", "NONE"] },
+        "secretRef": {
+          "description": "Opaque reference into the secret store, e.g. secret://org_123/llm-gateway. Never the secret itself.",
+          "type": "string",
+          "pattern": "^secret://[A-Za-z0-9_-]{3,64}/[A-Za-z0-9._-]{1,100}$"
+        }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "method": { "not": { "const": "NONE" } } } },
+      "then": { "required": ["secretRef"] }
+    },
+    "status": { "enum": ["PENDING_TEST", "ACTIVE", "FAILED_TEST", "DISABLED", "REVOKED"] },
+    "connectionTest": {
+      "type": "object",
+      "required": ["result", "at"],
+      "properties": {
+        "result": { "enum": ["PASS", "FAIL"] },
+        "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "errorClass": { "type": "string", "maxLength": 100 }
+      },
+      "additionalProperties": false
+    },
+    "discoveredModelIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "maxLength": 200 } },
+    "modelAllowlist": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 200 } },
+    "privacyClassification": { "enum": ["PUBLIC_WEB_ONLY", "PROJECT_PRIVATE", "SENSITIVE_ALLOWED"] },
+    "costMetadata": { "$ref": "common.schema.json#/$defs/knownString" },
+    "rateLimitMetadata": { "$ref": "common.schema.json#/$defs/knownString" },
+    "createdBy": { "$ref": "common.schema.json#/$defs/userActor" },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "disabledAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "revokedAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "runtimeMode": { "const": "CLOUD_HOSTED_1STSTEP" } } },
+      "then": { "properties": { "endpoint": { "properties": { "networkZone": { "const": "PUBLIC_INTERNET" }, "baseUrl": { "pattern": "^https://" } } } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "ACTIVE" } } },
+      "then": {
+        "required": ["connectionTest"],
+        "properties": { "connectionTest": { "properties": { "result": { "const": "PASS" } } }, "modelAllowlist": { "minItems": 1 } }
+      }
+    },
+    { "if": { "properties": { "status": { "const": "REVOKED" } } }, "then": { "required": ["revokedAt"] } },
+    { "if": { "properties": { "status": { "const": "DISABLED" } } }, "then": { "required": ["disabledAt"] } }
+  ]
+}

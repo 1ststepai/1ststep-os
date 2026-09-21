@@ -1,0 +1,15 @@
+{
+  "kind": "Handoff",
+  "schemaVersion": "0.1.0",
+  "id": "handoff_example",
+  "date": "2026-09-02",
+  "cycle": "fixture",
+  "author": { "actorType": "AGENT", "actorId": "orchestrator" },
+  "summary": "Fixture handoff.",
+  "filesChanged": [ { "path": "docs/NEW.md", "change": "RENAMED", "from": "docs/OLD.md" } ],
+  "checks": [ { "name": "spec checks", "command": "npm run check", "result": "PASS", "summary": "fixture" } ],
+  "gates": [ { "gate": "G1", "result": "NOT_EVALUATED" } ],
+  "blockers": [],
+  "openDecisions": [ { "id": "OD-fixture", "question": "Fixture?", "blocks": "nothing" } ],
+  "nextRecommendedCycle": { "objective": "Fixture.", "milestoneIds": ["M1"], "entryCriteria": [] }
+}

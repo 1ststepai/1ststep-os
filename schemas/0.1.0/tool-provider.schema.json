@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/tool-provider.schema.json",
+  "title": "ToolProvider",
+  "description": "Registry entry for a tool, service, library or connector that can fulfil capabilities. Facts about third parties are assessments with evidence and a last-verified timestamp; unverified pricing or terms are never treated as known.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "name", "capabilityIds", "providerType", "routingClass", "automationLevel",
+    "licensing", "privacy", "pricing", "auth", "externalActionScopes", "latency", "reliability", "lockIn",
+    "migrationPath", "strengths", "weaknesses", "fallbackToolIds", "lastVerified", "evidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ToolProvider" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "capabilityIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/capabilityId" } },
+    "providerType": { "enum": ["DETERMINISTIC_LOCAL", "EXISTING_PROJECT_ASSET", "OPEN_SOURCE_SELF_HOSTED", "MANAGED_SERVICE", "AI_MODEL_API", "CONNECTOR_PLATFORM", "HUMAN_SERVICE"] },
+    "routingClass": {
+      "description": "Position in the cost-first routing order (tooling/COST_FIRST_ROUTER.md): 1 deterministic/local … 7 premium model/tool.",
+      "type": "integer", "minimum": 1, "maximum": 7
+    },
+    "automationLevel": { "enum": ["GUIDANCE_ONLY", "ASSISTED", "AUTOMATED_WITH_APPROVAL", "AUTOMATED"] },
+    "licensing": {
+      "type": "object",
+      "required": ["license", "commercialUse", "outputOwnership"],
+      "properties": {
+        "license": { "$ref": "common.schema.json#/$defs/knownString" },
+        "commercialUse": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "outputOwnership": { "$ref": "common.schema.json#/$defs/knownString" }
+      },
+      "additionalProperties": false
+    },
+    "privacy": {
+      "type": "object",
+      "required": ["dataRetention", "trainsOnCustomerData", "dataRegions", "dpaAvailable"],
+      "properties": {
+        "dataRetention": { "$ref": "common.schema.json#/$defs/knownString" },
+        "trainsOnCustomerData": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "dataRegions": { "$ref": "common.schema.json#/$defs/knownStringList" },
+        "dpaAvailable": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "pricing": {
+      "type": "object",
+      "required": ["basis", "details"],
+      "properties": {
+        "basis": {
+          "$ref": "common.schema.json#/$defs/assessment",
+          "properties": { "value": { "enum": ["FREE", "OPEN_SOURCE_SELF_HOSTED", "PER_USE", "SUBSCRIPTION", "PER_SEAT", "MIXED"] } },
+          "unevaluatedProperties": false
+        },
+        "details": { "$ref": "common.schema.json#/$defs/knownString" }
+      },
+      "additionalProperties": false
+    },
+    "auth": {
+      "type": "object",
+      "required": ["method", "scopesRequested"],
+      "properties": {
+        "method": { "enum": ["NONE", "API_KEY", "OAUTH2", "SERVICE_ACCOUNT", "USER_SESSION_ONLY"] },
+        "scopesRequested": { "type": "array", "items": { "type": "string", "maxLength": 200 } }
+      },
+      "additionalProperties": false
+    },
+    "externalActionScopes": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/actionScope" } },
+    "latency": { "$ref": "common.schema.json#/$defs/knownString" },
+    "reliability": { "$ref": "common.schema.json#/$defs/knownString" },
+    "lockIn": { "$ref": "common.schema.json#/$defs/knownString" },
+    "migrationPath": { "$ref": "common.schema.json#/$defs/knownString" },
+    "strengths": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "weaknesses": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "fallbackToolIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "lastVerified": { "$ref": "common.schema.json#/$defs/knownTimestamp" },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceState" }
+  }
+}

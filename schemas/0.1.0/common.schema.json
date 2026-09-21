@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/common.schema.json",
+  "title": "Project OS common definitions",
+  "description": "Shared definitions. The `assessment` pattern is how every schema distinguishes unknown/unverified from false/empty: `status` says whether a value exists, `evidence` says how far it can be trusted.",
+  "$defs": {
+    "schemaVersion": { "const": "0.1.0" },
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "capabilityId": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9_]+$" },
+    "moduleId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,48}$" },
+    "semver": { "type": "string", "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-[0-9A-Za-z.-]+)?$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "httpsUrl": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2000 },
+    "relativePath": {
+      "description": "Portable relative POSIX path. No absolute paths, no `..` segments, no backslashes.",
+      "type": "string",
+      "maxLength": 240,
+      "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "evidenceState": { "enum": ["CONFIRMED", "OBSERVED", "INFERRED", "ASSUMED", "UNVERIFIED", "BLOCKED"] },
+    "confidence": { "enum": ["HIGH", "MEDIUM", "LOW", "NONE"] },
+    "phase": { "enum": ["P0", "P1", "P2", "LATER"] },
+    "domain": { "enum": ["orchestrator", "engineering", "business-intelligence", "growth", "operations"] },
+    "gateId": { "enum": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "DESIGN_REVIEW", "COST_REVIEW"] },
+    "scope": {
+      "description": "External-action permission scopes (EXTERNAL_ACTIONS.md). `approve` is held only by humans.",
+      "enum": ["read", "draft", "approve", "publish", "account_create", "deploy", "billing", "destructive"]
+    },
+    "actionScope": {
+      "description": "A scope an action or automation step may require (everything except `approve`).",
+      "enum": ["read", "draft", "publish", "account_create", "deploy", "billing", "destructive"]
+    },
+    "valueSource": { "enum": ["USER_STATED", "USER_CONFIRMED", "INFERRED", "RESEARCHED", "DEFAULTED", "RULE_DERIVED"] },
+    "actor": {
+      "type": "object",
+      "required": ["actorType", "actorId"],
+      "properties": {
+        "actorType": { "enum": ["USER", "AGENT", "SYSTEM"] },
+        "actorId": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "userActor": {
+      "$ref": "#/$defs/actor",
+      "properties": { "actorType": { "const": "USER" } }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": ["state", "description"],
+      "properties": {
+        "state": { "$ref": "#/$defs/evidenceState" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "ref": { "type": "string", "maxLength": 1000 }
+      },
+      "additionalProperties": false
+    },
+    "untrustedText": {
+      "description": "Free text that must be rendered as data, never as instructions.",
+      "type": "object",
+      "required": ["text", "trust"],
+      "properties": {
+        "text": { "type": "string", "maxLength": 20000 },
+        "trust": { "enum": ["USER_INPUT", "UNTRUSTED_EXTERNAL", "AI_GENERATED"] }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "description": "KNOWN requires value+evidence+source. UNKNOWN / NOT_APPLICABLE / DECLINED forbid value. KNOWN with an empty list means 'confirmed none'.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["KNOWN", "UNKNOWN", "NOT_APPLICABLE", "DECLINED"] },
+        "value": true,
+        "evidence": { "$ref": "#/$defs/evidenceState" },
+        "source": { "$ref": "#/$defs/valueSource" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "claimIds": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "note": { "type": "string", "maxLength": 2000 }
+      },
+      "if": { "properties": { "status": { "const": "KNOWN" } } },
+      "then": { "required": ["value", "evidence", "source"] },
+      "else": { "not": { "required": ["value"] } }
+    },
+    "knownString": {
+      "$ref": "#/$defs/assessment",
+      "properties": { "value": { "type": "string", "minLength": 1, "maxLength": 4000 } },
+      "unevaluatedProperties": false
+    },
+    "knownBoolean": {
+      "$ref": "#/$defs/assessment",
+      "properties": { "value": { "type": "boolean" } },
+      "unevaluatedProperties": false
+    },
+    "knownNumber": {
+      "$ref": "#/$defs/assessment",
+      "properties": { "value": { "type": "number", "minimum": 0 } },
+      "unevaluatedProperties": false
+    },
+    "knownInteger": {
+      "$ref": "#/$defs/assessment",
+      "properties": { "value": { "type": "integer", "minimum": 0 } },
+      "unevaluatedProperties": false
+    },
+    "knownTimestamp": {
+      "$ref": "#/$defs/assessment",
+      "properties": { "value": { "type": "string", "format": "date-time" } },
+      "unevaluatedProperties": false
+    },
+    "knownStringList": {
+      "$ref": "#/$defs/assessment",
+      "properties": {
+        "value": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 1000 } }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

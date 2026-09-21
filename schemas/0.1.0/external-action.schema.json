@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/external-action.schema.json",
+  "title": "ExternalAction",
+  "description": "Record of an action that reads from or writes to a system outside 1stStep OS. The scope → risk-tier mapping is fixed by EXTERNAL_ACTIONS.md and enforced here. Approval is bound to the exact payload hash (equality checked in code).",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "projectId", "idempotencyKey", "requiredScope", "riskTier", "executionMode",
+    "target", "payloadSummary", "payloadHash", "authorization", "approval", "status", "attempts", "evidence", "reversal", "createdBy", "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ExternalAction" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 200 },
+    "requiredScope": { "$ref": "common.schema.json#/$defs/actionScope" },
+    "riskTier": { "enum": ["T0_INTERNAL", "T1_EXTERNAL_READ", "T2_APPROVAL_REQUIRED", "T3_HIGH_RISK_APPROVAL"] },
+    "executionMode": { "enum": ["MANUAL_BY_USER", "CONNECTOR"] },
+    "sourceAutomationId": { "$ref": "common.schema.json#/$defs/id" },
+    "target": {
+      "type": "object",
+      "required": ["platform", "service"],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "service": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "accountRef": { "type": "string", "maxLength": 200, "description": "Opaque reference. Never a credential or token." },
+        "url": { "$ref": "common.schema.json#/$defs/httpsUrl" }
+      },
+      "additionalProperties": false
+    },
+    "payloadSummary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "payloadHash": { "$ref": "common.schema.json#/$defs/sha256" },
+    "authorization": {
+      "type": "object",
+      "required": ["grantedScopes", "grantedBy", "grantedAt"],
+      "properties": {
+        "connectorId": { "$ref": "common.schema.json#/$defs/id" },
+        "grantedScopes": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/actionScope" } },
+        "grantedBy": { "$ref": "common.schema.json#/$defs/userActor" },
+        "grantedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "expiresAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED", "EXPIRED"] },
+        "approver": { "$ref": "common.schema.json#/$defs/userActor" },
+        "approvedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "approvedPayloadHash": { "$ref": "common.schema.json#/$defs/sha256" },
+        "reauthenticatedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "note": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["DRAFTED", "AWAITING_APPROVAL", "APPROVED", "EXECUTING", "SUCCEEDED", "FAILED", "CANCELLED", "BLOCKED"] },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "result"],
+        "properties": {
+          "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+          "result": { "enum": ["SUCCEEDED", "FAILED", "UNKNOWN_OUTCOME"] },
+          "externalId": { "type": "string", "maxLength": 300 },
+          "errorClass": { "type": "string", "maxLength": 100 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidenceItem" } },
+    "reversal": { "$ref": "common.schema.json#/$defs/knownString" },
+    "createdBy": { "$ref": "common.schema.json#/$defs/actor" },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    { "if": { "properties": { "requiredScope": { "const": "draft" } } }, "then": { "properties": { "riskTier": { "const": "T0_INTERNAL" } } } },
+    { "if": { "properties": { "requiredScope": { "const": "read" } } }, "then": { "properties": { "riskTier": { "const": "T1_EXTERNAL_READ" } } } },
+    { "if": { "properties": { "requiredScope": { "enum": ["publish", "account_create"] } } }, "then": { "properties": { "riskTier": { "const": "T2_APPROVAL_REQUIRED" } } } },
+    { "if": { "properties": { "requiredScope": { "enum": ["deploy", "billing", "destructive"] } } }, "then": { "properties": { "riskTier": { "const": "T3_HIGH_RISK_APPROVAL" } } } },
+    { "if": { "properties": { "requiredScope": { "const": "account_create" } } }, "then": { "properties": { "executionMode": { "const": "MANUAL_BY_USER" } } } },
+    {
+      "if": {
+        "required": ["status", "riskTier"],
+        "properties": { "status": { "enum": ["APPROVED", "EXECUTING", "SUCCEEDED"] }, "riskTier": { "enum": ["T2_APPROVAL_REQUIRED", "T3_HIGH_RISK_APPROVAL"] } }
+      },
+      "then": { "properties": { "approval": { "required": ["state", "approver", "approvedAt", "approvedPayloadHash"], "properties": { "state": { "const": "APPROVED" } } } } }
+    },
+    {
+      "if": {
+        "required": ["status", "riskTier"],
+        "properties": { "status": { "enum": ["APPROVED", "EXECUTING", "SUCCEEDED"] }, "riskTier": { "const": "T3_HIGH_RISK_APPROVAL" } }
+      },
+      "then": { "properties": { "approval": { "required": ["reauthenticatedAt"] } } }
+    }
+  ]
+}

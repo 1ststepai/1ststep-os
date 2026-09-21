@@ -1,0 +1,635 @@
+{
+  "kind": "Handoff",
+  "schemaVersion": "0.1.0",
+  "id": "handoff-2026-09-13-cycle0",
+  "date": "2026-09-13",
+  "cycle": "Cycle 0",
+  "author": {
+    "actorType": "AGENT",
+    "actorId": "orchestrator"
+  },
+  "summary": "Reconciled the full 1stStep OS specification (including the Everything Layer and Universal LLM Addendum that arrived mid-cycle), accepted the MVP architecture (ADR-010, ADR-012 + Amendment A, ADR-013, ADR-014), defined 20 versioned schema files and capability/module registries with automated checks, recorded G0 and G1 PASS (ratification pending), and scaffolded the approved workspace layout without product features. Not production-ready; nothing deployed.",
+  "filesChanged": [
+    {
+      "path": "AGENTS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "PROJECT.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "PRODUCT_REQUIREMENTS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "SECURITY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "RESEARCH_POLICY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "EXTERNAL_ACTIONS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "DECISIONS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "SCHEMAS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "DATA_MODEL.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "UX.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "README.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "FILE_INDEX.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "APPLY_THIS_UPDATE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "AI_RUNTIME_OS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "EVERYTHING_OS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "PREMIUM_EXPERIENCE_OS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "FRONTEND_QUALITY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "DESIGN_REVIEW_GATE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "COST_REVIEW_GATE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": ".project-os/manifest.json",
+      "change": "MODIFIED"
+    },
+    {
+      "path": ".project-os/modules.json",
+      "change": "MODIFIED"
+    },
+    {
+      "path": ".project-os/permissions.json",
+      "change": "MODIFIED"
+    },
+    {
+      "path": ".project-os/state.json",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G0-intake.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G1-architecture.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G2-implementation.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G3-security.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G4-testing.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G5-release-readiness.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G6-production-verification.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "gates/G7-post-release.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "tooling/CAPABILITY_REGISTRY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "tooling/COST_FIRST_ROUTER.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "tooling/BUILD_VS_BUY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "media/MEDIA_FACTORY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "media/VOICE_IDENTITY_SAFETY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "automation/AUTOMATION_ENGINE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "operations/BUSINESS_OWNER_MODE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "capabilities/analytics/RETENTION.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "capabilities/security/RETENTION.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/CURRENT_STATE.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/IMPLEMENTATION_INVENTORY.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/NEXT_ACTIONS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/BLOCKERS.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/KNOWN_ISSUES.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "state/TECH_DEBT.md",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "capabilities/ai/AI_AGENTS.md",
+      "change": "RENAMED",
+      "from": "capabilities/ai/AGENTS.md"
+    },
+    {
+      "path": ".gitignore",
+      "change": "ADDED"
+    },
+    {
+      "path": "GENERATION_CONTRACT.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/server/package.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/server/src/app.ts",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/server/src/server.ts",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/server/test/health.test.ts",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/index.html",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/package.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/src/tokens.css",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/tsconfig.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "apps/web/vite.config.ts",
+      "change": "ADDED"
+    },
+    {
+      "path": "architecture/decisions/ADR-010-mvp-application-architecture.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "architecture/decisions/ADR-013-premium-experience-architecture.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "architecture/decisions/ADR-014-capabilities-media-automation-business-owner.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "audit/2026-09-13-cycle0-reconciliation.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "audit/findings.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "capabilities/registry.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "gates/results/G0-2026-09-13-cycle0.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "gates/results/G1-2026-09-13-cycle0.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "handoffs/2026-09-13-cycle0.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "handoffs/2026-09-13-cycle0.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "modules/registry.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "package-lock.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "package.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "packages/core/package.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "change": "ADDED"
+    },
+    {
+      "path": "packages/core/test/boundary.test.mjs",
+      "change": "ADDED"
+    },
+    {
+      "path": "plan/MVP_MILESTONES.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "plan/SCOPE.md",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/automation-definition.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/capability-definition.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/capability-registry.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/common.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/consent-record.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/automation-definition.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/consent-record.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/external-action.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/finding.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/gate-result.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/handoff.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/llm-connection.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/media-asset.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/model-provider.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/project-os-manifest.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/project-profile.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/provider-policy.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/recommendation.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/research-claim.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/examples/tool-provider.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/external-action.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/finding.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/gate-result.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/handoff.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/llm-connection.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/media-asset.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/model-provider.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/module-definition.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/module-registry.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/project-os-manifest.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/project-profile.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/provider-policy.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/recommendation.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/research-claim.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "schemas/0.1.0/tool-provider.schema.json",
+      "change": "ADDED"
+    },
+    {
+      "path": "tools/build-capability-registry.mjs",
+      "change": "ADDED"
+    },
+    {
+      "path": "tools/spec.test.mjs",
+      "change": "ADDED"
+    },
+    {
+      "path": "tsconfig.base.json",
+      "change": "ADDED"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Spec checks + workspace tests",
+      "command": "npm test",
+      "result": "PASS",
+      "summary": "Exit 0 after FILE_INDEX regeneration. Spec checks 10/10 (schemas compile; fixtures; 48 mutations rejected; capability registry; module registry; machine/Markdown agreement; gate/finding/handoff validation; FILE_INDEX; no nested AGENTS.md; secret scan); apps/server 2/2; packages/core 2/2.",
+      "at": "2026-09-13T09:30:00Z"
+    },
+    {
+      "name": "Core purity boundary",
+      "command": "node --test \"test/*.test.mjs\" (packages/core)",
+      "result": "PASS",
+      "summary": "2/2 pass"
+    },
+    {
+      "name": "Server health tests",
+      "command": "node --test \"test/*.test.ts\" (apps/server)",
+      "result": "PASS",
+      "summary": "2/2 pass"
+    },
+    {
+      "name": "Web build",
+      "command": "npm run build",
+      "result": "PASS",
+      "summary": "vite 8.3.0; JS 219.76 kB (68.67 kB gzip); CSS 0.37 kB"
+    },
+    {
+      "name": "Web type-check",
+      "command": "npx tsc -p apps/web/tsconfig.json --noEmit",
+      "result": "PASS",
+      "summary": "TypeScript 7.0.2, exit 0"
+    },
+    {
+      "name": "Server smoke",
+      "command": "node smoke.mjs (scratchpad; starts apps/server/src/server.ts on port 3917)",
+      "result": "PASS",
+      "summary": "/os/api/healthz 200 {\"status\":\"ok\"}; /os/ 200 HTML with #root; JS asset 200"
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "result": "PASS",
+      "ref": "gates/results/G0-2026-09-13-cycle0.json"
+    },
+    {
+      "gate": "G1",
+      "result": "PASS",
+      "ref": "gates/results/G1-2026-09-13-cycle0.json"
+    },
+    {
+      "gate": "G2",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "G3",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "G4",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "G5",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "G6",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "G7",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "DESIGN_REVIEW",
+      "result": "NOT_EVALUATED"
+    },
+    {
+      "gate": "COST_REVIEW",
+      "result": "NOT_EVALUATED"
+    }
+  ],
+  "blockers": [],
+  "openDecisions": [
+    {
+      "id": "OD-1",
+      "question": "Container host and managed Postgres provider",
+      "blocks": "M8 staging"
+    },
+    {
+      "id": "OD-2",
+      "question": "Research/search provider",
+      "blocks": "M5 live research"
+    },
+    {
+      "id": "OD-3",
+      "question": "Share identity with other 1stStep.ai products?",
+      "blocks": "M2 production auth"
+    },
+    {
+      "id": "OD-4",
+      "question": "Transactional email provider",
+      "blocks": "M2 magic link"
+    },
+    {
+      "id": "OD-5",
+      "question": "Routing of 1ststep.ai/os",
+      "blocks": "M8"
+    },
+    {
+      "id": "OD-6",
+      "question": "AI data policy for third-party model providers",
+      "blocks": "M3 with real user data"
+    },
+    {
+      "id": "OD-7",
+      "question": "Error tracking vendor",
+      "blocks": "G5"
+    },
+    {
+      "id": "OD-8",
+      "question": "Version control and CI",
+      "blocks": "CI; recommended before M1"
+    },
+    {
+      "id": "OD-9",
+      "question": "Pricing, plans and AI budgets",
+      "blocks": "Public launch; COST_REVIEW targets"
+    },
+    {
+      "id": "OD-10",
+      "question": "Theme scope (light only vs light + dark)",
+      "blocks": "M7 visual finalization"
+    },
+    {
+      "id": "OD-11",
+      "question": "Define Project Genome; 1stStep OS Audit integration scope",
+      "blocks": "Audit integration work"
+    }
+  ],
+  "nextRecommendedCycle": {
+    "objective": "Cycle 1 — M1 Core domain engine: schema validators, risk ruleset 0.1.0 and deterministic selectModules() with golden fixtures for all 22 modules.",
+    "milestoneIds": [
+      "M1"
+    ],
+    "entryCriteria": [
+      "npm test green",
+      "OD-8 decided or explicitly deferred",
+      "Owner ratification of G1 requested"
+    ]
+  }
+}

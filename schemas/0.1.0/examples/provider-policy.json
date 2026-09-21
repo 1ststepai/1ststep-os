@@ -1,0 +1,26 @@
+{
+  "kind": "ProviderPolicy",
+  "schemaVersion": "0.1.0",
+  "id": "policy_example_org",
+  "organizationId": "org_example",
+  "scope": { "level": "ORGANIZATION", "ref": "org_example" },
+  "providers": { "mode": "ANY_ELIGIBLE", "allowed": [], "prohibited": [], "preferred": [] },
+  "allowedTiers": ["B_LOW_COST", "C_BALANCED", "D_PREMIUM"],
+  "allowedHosting": ["HOSTED_API", "ENTERPRISE_GATEWAY", "CLOUD_MODEL_PLATFORM"],
+  "localOnly": false,
+  "residency": { "status": "UNKNOWN" },
+  "dataRetention": {
+    "maxRetentionDays": { "status": "KNOWN", "value": 30, "evidence": "CONFIRMED", "source": "USER_STATED" },
+    "zeroDataRetentionRequired": false,
+    "trainingOnDataAllowed": false
+  },
+  "budgets": {
+    "maxCostPerRunUsd": { "status": "UNKNOWN" },
+    "maxCostPerTaskUsd": { "status": "UNKNOWN" },
+    "monthlyCeilingUsd": { "status": "UNKNOWN" }
+  },
+  "failover": { "crossProviderAllowed": true, "tierDowngradeAllowed": false, "pauseInsteadOfFailover": false },
+  "verification": { "independentModelRequired": true, "independentProviderRequired": false },
+  "updatedBy": { "actorType": "USER", "actorId": "user_example" },
+  "updatedAt": "2026-09-02T12:00:00Z"
+}

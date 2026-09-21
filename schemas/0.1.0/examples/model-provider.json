@@ -1,0 +1,48 @@
+{
+  "kind": "ModelProvider",
+  "schemaVersion": "0.1.0",
+  "id": "model_anthropic_sonnet_candidate",
+  "provider": "anthropic",
+  "modelId": "claude-sonnet-5",
+  "hosting": "HOSTED_API",
+  "endpointType": "NATIVE_PROVIDER_API",
+  "authMethod": "API_KEY",
+  "tier": "C_BALANCED",
+  "modalities": { "input": ["TEXT", "IMAGE"], "output": ["TEXT"] },
+  "features": {
+    "structuredOutput": { "status": "UNKNOWN", "note": "Verify at M3 before activation." },
+    "toolUse": { "status": "UNKNOWN" },
+    "promptCaching": { "status": "UNKNOWN" },
+    "streaming": { "status": "UNKNOWN" },
+    "batch": { "status": "UNKNOWN" },
+    "embeddings": { "status": "UNKNOWN" },
+    "codeExecution": { "status": "UNKNOWN" }
+  },
+  "limits": {
+    "contextWindowTokens": { "status": "UNKNOWN" },
+    "maxOutputTokens": { "status": "UNKNOWN" },
+    "rateLimits": { "status": "UNKNOWN" },
+    "latencyProfile": { "status": "UNKNOWN" }
+  },
+  "pricing": {
+    "currency": "USD",
+    "unit": "PER_MILLION_TOKENS",
+    "basis": "PUBLISHED_LIST_PRICE",
+    "input": { "status": "UNKNOWN" },
+    "output": { "status": "UNKNOWN" },
+    "cachedInput": { "status": "UNKNOWN" }
+  },
+  "dataPolicy": {
+    "retention": { "status": "UNKNOWN" },
+    "trainsOnCustomerData": { "status": "UNKNOWN" },
+    "zeroDataRetentionAvailable": { "status": "UNKNOWN" }
+  },
+  "residency": { "status": "UNKNOWN" },
+  "fineTuning": { "status": "UNKNOWN" },
+  "health": { "status": "UNKNOWN" },
+  "status": "CANDIDATE",
+  "lastVerified": { "status": "UNKNOWN" },
+  "evidence": "UNVERIFIED",
+  "evalResults": [],
+  "fallbackModelIds": []
+}

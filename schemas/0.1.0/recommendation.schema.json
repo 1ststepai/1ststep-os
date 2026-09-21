@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/recommendation.schema.json",
+  "title": "Recommendation",
+  "description": "A recommendation with its options and evidence. It becomes canonical (ACCEPTED) only through explicit user approval or a versioned deterministic rule; never automatically from unsupported claims.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "projectId", "category", "title", "summary", "rationale", "options",
+    "supportingClaimIds", "assumptionIds", "evidence", "confidence", "unresolved", "status", "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "Recommendation" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "category": { "enum": ["STACK", "ARCHITECTURE", "MODULE", "PRICING", "POSITIONING", "BRAND", "CHANNEL", "RISK_MITIGATION", "OTHER"] },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "rationale": { "type": "string", "minLength": 1, "maxLength": 8000 },
+    "options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "pros", "cons", "chosen"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "pros": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+          "cons": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+          "costNotes": { "type": "string", "maxLength": 2000 },
+          "lockIn": { "type": "string", "maxLength": 2000 },
+          "chosen": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "supportingClaimIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "assumptionIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceState" },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "unresolved": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+    "status": { "enum": ["PROPOSED", "NEEDS_EVIDENCE", "ACCEPTED", "REJECTED", "SUPERSEDED"] },
+    "decision": {
+      "type": "object",
+      "required": ["basis", "decidedBy", "decidedAt"],
+      "properties": {
+        "basis": { "enum": ["USER_APPROVAL", "DETERMINISTIC_RULE"] },
+        "decidedBy": { "$ref": "common.schema.json#/$defs/actor" },
+        "decidedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "ruleId": { "$ref": "common.schema.json#/$defs/id" },
+        "ruleVersion": { "$ref": "common.schema.json#/$defs/semver" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "basis": { "const": "USER_APPROVAL" } } },
+          "then": { "properties": { "decidedBy": { "$ref": "common.schema.json#/$defs/userActor" } } }
+        },
+        {
+          "if": { "properties": { "basis": { "const": "DETERMINISTIC_RULE" } } },
+          "then": { "required": ["ruleId", "ruleVersion"] }
+        }
+      ]
+    },
+    "supersededBy": { "$ref": "common.schema.json#/$defs/id" },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "enum": ["ACCEPTED", "REJECTED"] } } },
+      "then": { "required": ["decision"] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "SUPERSEDED" } } },
+      "then": { "required": ["supersededBy"] }
+    }
+  ]
+}

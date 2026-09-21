@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/media-asset.schema.json",
+  "title": "MediaAsset",
+  "description": "A versioned Media Factory asset with provenance, rights and consent links (media/MEDIA_FACTORY.md). Identity-bearing assets must reference ConsentRecords; approved assets must have known rights.",
+  "type": "object",
+  "required": ["kind", "schemaVersion", "id", "projectId", "assetType", "title", "version", "status", "production", "provenance", "rights", "identitySubjects", "storage", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "MediaAsset" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "assetType": { "$ref": "#/$defs/assetType" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "version": { "type": "integer", "minimum": 1 },
+    "parentAssetIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "brandSourceAssetId": { "$ref": "common.schema.json#/$defs/id" },
+    "status": { "enum": ["DRAFT", "IN_REVIEW", "APPROVED", "PUBLISHED", "REVOKED", "DELETED"] },
+    "production": {
+      "type": "object",
+      "required": ["method", "operation", "cost"],
+      "properties": {
+        "method": { "enum": ["DETERMINISTIC_TRANSFORM", "CAPTURE", "HUMAN_CREATED", "AI_GENERATED", "AI_EDITED", "LICENSED_STOCK", "USER_UPLOAD"] },
+        "operation": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "toolProviderId": { "$ref": "common.schema.json#/$defs/id" },
+        "modelProviderId": { "$ref": "common.schema.json#/$defs/id" },
+        "promptHash": { "$ref": "common.schema.json#/$defs/sha256" },
+        "parametersHash": { "$ref": "common.schema.json#/$defs/sha256" },
+        "cost": { "$ref": "common.schema.json#/$defs/knownNumber" }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "method": { "enum": ["AI_GENERATED", "AI_EDITED"] } } },
+      "then": { "required": ["modelProviderId", "promptHash"] }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["createdBy", "createdAt", "contentHash", "sourceAssetHashes", "contentCredentialsAttached", "aiDisclosureRequired"],
+      "properties": {
+        "createdBy": { "$ref": "common.schema.json#/$defs/actor" },
+        "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "contentHash": { "$ref": "common.schema.json#/$defs/sha256" },
+        "sourceAssetHashes": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/sha256" } },
+        "contentCredentialsAttached": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "aiDisclosureRequired": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "rights": {
+      "type": "object",
+      "required": ["license", "commercialUse", "attributionRequired"],
+      "properties": {
+        "license": {
+          "$ref": "common.schema.json#/$defs/assessment",
+          "properties": { "value": { "enum": ["OWNED", "LICENSED", "CC0", "CC_BY", "CC_BY_SA", "ROYALTY_FREE_STOCK", "PROVIDER_TERMS"] } },
+          "unevaluatedProperties": false
+        },
+        "commercialUse": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "attributionRequired": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "attributionText": { "type": "string", "maxLength": 500 },
+        "restrictions": { "type": "string", "maxLength": 2000 },
+        "expiresAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "identitySubjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["identityType", "subjectLabel", "consentRecordId"],
+        "properties": {
+          "identityType": { "enum": ["VOICE", "LIKENESS", "NAME"] },
+          "subjectLabel": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "consentRecordId": { "$ref": "common.schema.json#/$defs/id" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "aspectRatio"],
+        "properties": {
+          "platform": { "type": "string", "maxLength": 100 },
+          "aspectRatio": { "type": "string", "pattern": "^[0-9]{1,2}:[0-9]{1,2}$" },
+          "locale": { "type": "string", "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$" },
+          "durationSeconds": { "type": "number", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "brandCheck": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["PASS", "FAIL", "NOT_CHECKED"] },
+        "checkedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "notes": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "required": ["ref", "mimeType", "bytes"],
+      "properties": {
+        "ref": { "type": "string", "minLength": 1, "maxLength": 500, "description": "Opaque object-store key; never a signed URL or credential." },
+        "mimeType": { "type": "string", "pattern": "^[a-z]+/[a-z0-9.+-]+$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "assetType": { "enum": ["VOICE_MODEL", "CLONED_VOICEOVER", "DUBBED_AUDIO", "DUBBED_VIDEO", "AVATAR_VIDEO", "LIPSYNC_VIDEO"] } } },
+      "then": { "properties": { "identitySubjects": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["APPROVED", "PUBLISHED"] } } },
+      "then": {
+        "required": ["brandCheck"],
+        "properties": {
+          "rights": {
+            "properties": {
+              "license": { "properties": { "status": { "const": "KNOWN" } } },
+              "commercialUse": { "properties": { "status": { "const": "KNOWN" } } }
+            }
+          },
+          "brandCheck": { "properties": { "status": { "const": "PASS" } } }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "assetType": {
+      "enum": [
+        "BRAND_SOURCE", "IMAGE", "SCREENSHOT", "MOCKUP", "SOCIAL_CREATIVE", "THUMBNAIL", "SCRIPT", "STORYBOARD",
+        "VIDEO", "BROLL", "CLIP", "CAPTIONS", "VOICEOVER", "CLONED_VOICEOVER", "VOICE_MODEL", "DUBBED_AUDIO",
+        "DUBBED_VIDEO", "AVATAR_VIDEO", "LIPSYNC_VIDEO", "PODCAST_AUDIO", "MUSIC", "SFX", "MODEL_3D", "AR_ASSET"
+      ]
+    }
+  }
+}

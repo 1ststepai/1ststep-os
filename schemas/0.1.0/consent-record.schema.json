@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/consent-record.schema.json",
+  "title": "ConsentRecord",
+  "description": "Authorization for identity-sensitive use (voice, likeness, name, testimonial). Recorded and verified by humans only; ACTIVE requires verification; REVOKED requires a downstream revocation record (media/VOICE_IDENTITY_SAFETY.md).",
+  "type": "object",
+  "required": ["kind", "schemaVersion", "id", "projectId", "subject", "identityTypes", "lawfulBasis", "permittedUses", "prohibitedUses", "scope", "evidence", "status", "recordedBy", "recordedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ConsentRecord" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "subject": {
+      "type": "object",
+      "required": ["subjectType", "displayName"],
+      "properties": {
+        "subjectType": { "enum": ["ACCOUNT_HOLDER_SELF", "THIRD_PARTY_PERSON"] },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "contactRef": { "type": "string", "maxLength": 200 }
+      },
+      "additionalProperties": false
+    },
+    "identityTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["VOICE", "LIKENESS", "NAME", "TESTIMONIAL"] } },
+    "lawfulBasis": { "enum": ["EXPLICIT_CONSENT", "CONTRACT"] },
+    "permittedUses": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "enum": ["VOICE_CLONE_TRAINING", "SYNTHETIC_SPEECH", "DUBBING", "AVATAR", "LIPSYNC", "MARKETING_USE", "PRODUCT_UI_USE", "TESTIMONIAL_QUOTE"] }
+    },
+    "prohibitedUses": { "type": "array", "items": { "type": "string", "maxLength": 500 } },
+    "scope": {
+      "type": "object",
+      "required": ["projectIds", "channels", "territories", "languages"],
+      "properties": {
+        "projectIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+        "channels": { "$ref": "common.schema.json#/$defs/knownStringList" },
+        "territories": { "$ref": "common.schema.json#/$defs/knownStringList" },
+        "languages": { "$ref": "common.schema.json#/$defs/knownStringList" }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["method", "artifactHash", "capturedAt"],
+      "properties": {
+        "method": { "enum": ["SIGNED_DOCUMENT", "RECORDED_VERBAL_STATEMENT", "VERIFIED_IN_APP_ATTESTATION"] },
+        "artifactHash": { "$ref": "common.schema.json#/$defs/sha256" },
+        "capturedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "note": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["PENDING_VERIFICATION", "ACTIVE", "REVOKED", "EXPIRED"] },
+    "verification": {
+      "type": "object",
+      "required": ["verifiedBy", "verifiedAt", "method"],
+      "properties": {
+        "verifiedBy": { "$ref": "common.schema.json#/$defs/userActor" },
+        "verifiedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "method": { "type": "string", "minLength": 1, "maxLength": 500 }
+      },
+      "additionalProperties": false
+    },
+    "validFrom": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "expiresAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "revocation": {
+      "type": "object",
+      "required": ["revokedAt", "generationBlocked", "derivedModelsDeleted", "publishedAssetsReviewed"],
+      "properties": {
+        "revokedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "requestedBy": { "type": "string", "maxLength": 200 },
+        "generationBlocked": { "const": true },
+        "derivedModelsDeleted": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "publishedAssetsReviewed": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "completedAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "recordedBy": { "$ref": "common.schema.json#/$defs/userActor" },
+    "recordedAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "ACTIVE" } } }, "then": { "required": ["verification", "validFrom"] } },
+    { "if": { "properties": { "status": { "const": "REVOKED" } } }, "then": { "required": ["revocation"] } }
+  ]
+}

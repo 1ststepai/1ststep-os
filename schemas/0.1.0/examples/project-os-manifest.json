@@ -1,0 +1,27 @@
+{
+  "kind": "ProjectOSManifest",
+  "schemaVersion": "0.1.0",
+  "osSpecVersion": "0.1.0",
+  "generator": { "name": "1stStep OS", "compilerVersion": "0.1.0", "templateSetVersion": "0.1.0", "registryVersion": "0.1.0" },
+  "project": { "name": "Pet sitter marketplace (fixture)", "projectVersion": 1 },
+  "generatedAt": "2026-09-02T16:00:00Z",
+  "sourceProfile": { "profileId": "prof_example_petsit", "profileVersion": 3, "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" },
+  "inputsHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "platformPhase": "P0",
+  "modules": [
+    { "id": "core", "version": "0.1.0", "reason": "ALWAYS" },
+    { "id": "web-saas", "version": "0.1.0", "reason": "RULE_MATCH" },
+    { "id": "payments", "version": "0.1.0", "reason": "RULE_MATCH" }
+  ],
+  "deferredModules": [ { "id": "customer-success", "reason": "PHASE_NOT_AVAILABLE" } ],
+  "capabilities": [ { "id": "backend.auth", "generationPhase": "P0" } ],
+  "agents": [ { "id": "orchestrator", "path": "agents/orchestrator.md" } ],
+  "providerAdapters": [ { "id": "claude", "version": "0.1.0", "files": ["CLAUDE.md", "prompts/CLAUDE_BOOTSTRAP.md"] } ],
+  "authorityOrder": ["AGENTS.md", "PROJECT.md", "PRODUCT_REQUIREMENTS.md"],
+  "evidenceVocabulary": ["CONFIRMED", "OBSERVED", "INFERRED", "ASSUMED", "UNVERIFIED", "BLOCKED"],
+  "files": [
+    { "path": "AGENTS.md", "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "bytes": 0, "origin": "TEMPLATE", "authority": "CANONICAL" },
+    { "path": "CLAUDE.md", "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "bytes": 0, "origin": "ADAPTER", "authority": "ADAPTER" }
+  ],
+  "compatibility": { "minReaderSchemaVersion": "0.1.0", "migratedFrom": [] }
+}

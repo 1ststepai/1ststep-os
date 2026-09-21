@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/capability-definition.schema.json",
+  "title": "CapabilityDefinition",
+  "description": "One granular capability in the capability universe. Two phases are tracked separately: generationPhase (when a generated Project OS may contain guidance for it) and executionPhase (when 1stStep OS itself may perform it). Capabilities are activated only through module selection or explicit user request.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "domain", "title", "doc", "ownerDomain", "generationPhase", "executionPhase",
+    "maxAutomationLevel", "dependsOn", "conflictsWith", "externalActionScopes", "consentRequired",
+    "deterministicFirst", "costProfile", "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "CapabilityDefinition" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/capabilityId" },
+    "domain": { "$ref": "#/$defs/capabilityDomain" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "doc": { "$ref": "common.schema.json#/$defs/relativePath" },
+    "ownerDomain": { "$ref": "common.schema.json#/$defs/domain" },
+    "generationPhase": { "$ref": "common.schema.json#/$defs/phase" },
+    "executionPhase": { "$ref": "common.schema.json#/$defs/phase" },
+    "maxAutomationLevel": { "enum": ["GUIDANCE_ONLY", "ASSISTED", "AUTOMATED_WITH_APPROVAL", "AUTOMATED"] },
+    "dependsOn": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/capabilityId" } },
+    "conflictsWith": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/capabilityId" } },
+    "externalActionScopes": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/actionScope" } },
+    "consentRequired": { "type": "boolean", "description": "Execution requires an ACTIVE ConsentRecord covering the identity and use." },
+    "deterministicFirst": { "type": "boolean", "description": "Router must attempt a deterministic/local path before any generative model (tooling/COST_FIRST_ROUTER.md)." },
+    "costProfile": { "enum": ["NONE", "LOW", "VARIABLE", "HIGH"] },
+    "status": { "enum": ["STUB", "SPECIFIED", "DEPRECATED"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "consentRequired": { "const": true } } },
+      "then": { "properties": { "maxAutomationLevel": { "enum": ["GUIDANCE_ONLY", "ASSISTED", "AUTOMATED_WITH_APPROVAL"] } } }
+    },
+    {
+      "if": { "properties": { "externalActionScopes": { "contains": { "const": "account_create" } } } },
+      "then": { "properties": { "maxAutomationLevel": { "enum": ["GUIDANCE_ONLY", "ASSISTED"] } } }
+    },
+    {
+      "if": { "properties": { "externalActionScopes": { "contains": { "enum": ["publish", "deploy", "billing", "destructive"] } } } },
+      "then": { "properties": { "maxAutomationLevel": { "not": { "const": "AUTOMATED" } } } }
+    }
+  ],
+  "$defs": {
+    "capabilityDomain": {
+      "enum": [
+        "product", "design", "development", "ai", "backend", "infra", "quality", "security", "automation", "brand",
+        "image", "video", "audio", "spatial", "marketing", "sales", "customer", "analytics", "business",
+        "international", "docs", "team", "recovery", "intelligence"
+      ]
+    }
+  }
+}

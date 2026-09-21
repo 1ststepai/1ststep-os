@@ -1,0 +1,17 @@
+{
+  "kind": "GateResult",
+  "schemaVersion": "0.1.0",
+  "id": "gate_example_g4",
+  "gate": "G4",
+  "subject": { "type": "MILESTONE", "ref": "M-fixture" },
+  "result": "PASS",
+  "evaluatedAt": "2026-09-02T12:00:00Z",
+  "evaluator": { "actorType": "AGENT", "actorId": "qa-agent" },
+  "criteria": [
+    { "id": "crit-1", "description": "Critical-path tests pass.", "result": "PASS", "evidence": [ { "state": "OBSERVED", "description": "Fixture test output." } ] },
+    { "id": "crit-2", "description": "Device testing.", "result": "NOT_APPLICABLE", "evidence": [], "reason": "Fixture has no UI." }
+  ],
+  "blockers": [],
+  "nonBlockingOpenItems": [],
+  "ratification": { "state": "NOT_REQUIRED" }
+}

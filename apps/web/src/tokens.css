@@ -1,0 +1,25 @@
+/* Placeholder semantic tokens. Canonical tokens.json + generator arrive in M7 (ADR-013 §2). */
+:root {
+  --color-surface: #fbfaf8;
+  --color-text: #1c1b19;
+  --color-text-muted: #5f5b55;
+  --space-4: 1rem;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.shell {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: calc(var(--space-4) * 4) var(--space-4);
+}
+
+.shell p {
+  color: var(--color-text-muted);
+}

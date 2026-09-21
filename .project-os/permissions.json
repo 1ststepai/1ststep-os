@@ -1,0 +1,17 @@
+{
+  "default": "deny_external_write",
+  "authority": "EXTERNAL_ACTIONS.md",
+  "scopes": ["read", "draft", "approve", "publish", "account_create", "deploy", "billing", "destructive"],
+  "humanOnlyScopes": ["approve"],
+  "riskTiers": {
+    "draft": "T0_INTERNAL",
+    "read": "T1_EXTERNAL_READ",
+    "publish": "T2_APPROVAL_REQUIRED",
+    "account_create": "T2_APPROVAL_REQUIRED",
+    "deploy": "T3_HIGH_RISK_APPROVAL",
+    "billing": "T3_HIGH_RISK_APPROVAL",
+    "destructive": "T3_HIGH_RISK_APPROVAL"
+  },
+  "manualOnlyScopes": ["account_create"],
+  "connectors": []
+}

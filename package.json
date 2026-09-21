@@ -1,0 +1,23 @@
+{
+  "name": "1ststep-os",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "registry": "node tools/build-capability-registry.mjs",
+    "check": "node --test \"tools/*.test.mjs\"",
+    "test": "npm run check && npm test --workspaces --if-present",
+    "build": "npm run build -w @1ststep-os/web",
+    "start": "npm start -w @1ststep-os/server"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

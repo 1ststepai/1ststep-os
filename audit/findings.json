@@ -1,0 +1,705 @@
+{
+  "kind": "FindingLog",
+  "schemaVersion": "0.1.0",
+  "source": "audit/2026-09-13-cycle0-reconciliation.md",
+  "findings": [
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0001",
+      "title": "Three incompatible external-action vocabularies and conflicting defaults",
+      "severity": "HIGH",
+      "domain": "orchestrator",
+      "category": "conflicting-rules",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "EXTERNAL_ACTIONS.md",
+        "SECURITY.md",
+        ".project-os/permissions.json",
+        ".project-os/manifest.json"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "EXTERNAL_ACTIONS.md used AUTO_ALLOWED/ASSISTED/APPROVAL_REQUIRED/HIGH_RISK_APPROVAL; SECURITY.md listed READ/DRAFT/APPROVE/PUBLISH/DEPLOY/BILLING/DESTRUCTIVE (no account creation); permissions.json listed 8 lowercase classes."
+        },
+        {
+          "state": "OBSERVED",
+          "description": "manifest.json externalActionDefault = approval_required while permissions.json default = deny_external_write."
+        }
+      ],
+      "impact": "Agents and future code could authorize account creation or publishing under the wrong tier.",
+      "remediation": "Single scope vocabulary mapped to risk tiers T0-T3 (ADR-015); SECURITY.md references it; machine files aligned and checked.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "machine state test: permissions.json scopes equal common scope enum; defaults agree; EXTERNAL_ACTIONS.md lists every scope",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0002",
+      "title": "Incomplete authority chain",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "authority-chain",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "AGENTS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Hierarchy omitted RESEARCH_POLICY.md, EXTERNAL_ACTIONS.md, SCHEMAS.md, UX.md, DATA_MODEL.md and every Everything-layer file (PREMIUM_EXPERIENCE_OS.md, AI_RUNTIME_OS.md, EVERYTHING_OS.md, review gates, tooling/, media/, automation/, operations/, governance/, capabilities/); manifest.json ranked first but contains no rules."
+        }
+      ],
+      "impact": "Conflicts between canonical requirement files had no defined resolution.",
+      "remediation": "Complete hierarchy in AGENTS.md with strongest-rule principle; machine files declared mirrors checked by npm run check.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0003",
+      "title": "Evidence states undefined",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "ambiguous-terminology",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "AGENTS.md",
+        "RESEARCH_POLICY.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "CONFIRMED vs OBSERVED vs INFERRED had no definitions; research fact-vs-estimate, evidence state and confidence were conflated."
+        }
+      ],
+      "impact": "Research could be labelled CONFIRMED without human verification.",
+      "remediation": "Definitions in AGENTS.md; three independent axes in the research contract; automated research capped at OBSERVED; CONFIRMED requires human review (schema-enforced).",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "machine state test: AGENTS.md defines every evidence state; research-claim mutation rejects CONFIRMED without human review",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0004",
+      "title": "Gate results lack FAIL and machine-readable evidence",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "lifecycle",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "gates/G0-intake.md",
+        "gates/G1-architecture.md",
+        "gates/G2-implementation.md",
+        "gates/G3-security.md",
+        "gates/G4-testing.md",
+        "gates/G5-release-readiness.md",
+        "gates/G6-production-verification.md",
+        "gates/G7-post-release.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Result vocabulary was PASS | BLOCKED | NOT_APPLICABLE; no place to record criteria evidence."
+        }
+      ],
+      "impact": "An evaluated-but-failed gate could only be recorded as BLOCKED; PASS could be asserted narratively.",
+      "remediation": "FAIL added; GateResult schema requires evidence for PASS criteria; results stored in gates/results/.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "gate-result mutations reject PASS with FAIL criterion, PASS without evidence, BLOCKED without blockers",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0005",
+      "title": "MVP pipeline and journey include P1 features",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "conflicting-rules",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "ARCHITECTURE.md",
+        "UX.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "ARCHITECTURE.md ended the MVP pipeline with 'Preview / ZIP / Git' and UX.md listed 'connect repository' and 'project health' while PRODUCT_REQUIREMENTS.md places GitHub and health scoring in P1."
+        }
+      ],
+      "impact": "Scope creep into MVP.",
+      "remediation": "Git connection and health scoring marked P1 in both files.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0006",
+      "title": "Schema requirements incomplete and non-machine-readable",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "schema",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "SCHEMAS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "SCHEMAS.md prose covered 5 types; ModuleDefinition, Recommendation, GateResult, Capability, Tool/Model provider, MediaAsset, ConsentRecord, AutomationDefinition and Handoff were missing; ProjectProfile lacked distribution model, assumptions, mode and business operations required elsewhere."
+        }
+      ],
+      "impact": "No deterministic contract for the compiler and engines.",
+      "remediation": "15 versioned JSON Schemas with fixtures and negative mutation tests.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "all 17 required schema types compile with valid fixtures and 48 rejected mutations",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0007",
+      "title": "Missing boundary for second-order prompt injection and approval spoofing",
+      "severity": "HIGH",
+      "domain": "engineering",
+      "category": "security-boundary",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "SECURITY.md",
+        "GENERATION_CONTRACT.md"
+      ],
+      "evidence": [
+        {
+          "state": "INFERRED",
+          "description": "Generated Project OS files are consumed by coding agents as instructions; research and user text flowing into them unfenced would become executable instructions. No rule prevented 'already approved' text in imported content from counting as approval."
+        }
+      ],
+      "impact": "Downstream coding agents could be steered by attacker-controlled research content; approvals could be spoofed.",
+      "remediation": "Untrusted text rendered only in labelled data blocks and never in rule sections (validated at compile); approvals human-only and bound to payload hash.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0008",
+      "title": "Canonical requirements absent from PRD P0",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "missing-requirement",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "PRODUCT_REQUIREMENTS.md",
+        "PROJECT.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Premium UX, AI cost harness (declared canonical by prompts/CLAUDE_CYCLE0_ADDENDUM.md) and business-goal intake were not in PRODUCT_REQUIREMENTS.md; APPLY_THIS_UPDATE.md recommended adding references."
+        }
+      ],
+      "impact": "Milestones could omit required quality and cost controls.",
+      "remediation": "P0 sections added, marked for ratification; scope classification in plan/SCOPE.md.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0009",
+      "title": "Inconsistent module lists across documents",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "naming",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "PRODUCT_REQUIREMENTS.md",
+        "prompts/CLAUDE_BOOTSTRAP.md",
+        "EVERYTHING_OS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "PRD examples (local marketplace, internal tool), bootstrap list (growth, BI, operations) and Everything layer domains differed with no registry."
+        }
+      ],
+      "impact": "Unclear which modules exist.",
+      "remediation": "modules/registry.json (22 modules) covers all lists; marketplace and internal tool are product types handled by web-saas.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0010",
+      "title": "Missing lifecycle/state rules and data-rights requirements",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "lifecycle",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "AGENTS.md",
+        "state/IMPLEMENTATION_INVENTORY.md",
+        ".project-os/state.json",
+        "PRODUCT_REQUIREMENTS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Inventory statuses INITIALIZED/FUTURE were undefined; state.json duplicated CURRENT_STATE.md with no precedence; handoffs/ did not exist; no requirement for project deletion/export or AI data disclosure."
+        }
+      ],
+      "impact": "State drift and unverifiable cycle closure; privacy expectations undefined.",
+      "remediation": "Status vocabularies in AGENTS.md; state.json declared a checked mirror; handoffs/ created with schema; data-rights P0 requirements added (ratify).",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0011",
+      "title": "Module selection inputs included stack",
+      "severity": "LOW",
+      "domain": "engineering",
+      "category": "architecture",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        ".project-os/modules.json",
+        "ARCHITECTURE.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "modules.json selectionInputs listed 'stack' while stack recommendation needs selected modules."
+        }
+      ],
+      "impact": "Potential circular dependency in the pipeline.",
+      "remediation": "Selection consumes profile facts only; stack recommendation consumes selected modules.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0012",
+      "title": "Two ADR locations",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "duplicated-authority",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "DECISIONS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "DECISIONS.md held ADRs while the Cycle 0 prompt requires architecture/decisions/."
+        }
+      ],
+      "impact": "Decisions could diverge.",
+      "remediation": "DECISIONS.md is the index with short records; long ADRs in architecture/decisions/.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0013",
+      "title": "301 capability files are identical boilerplate with no metadata",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "incomplete-spec",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        ".project-os/capability-taxonomy.json"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Hashing file bodies after the title line showed every capability stub shares one template; nothing recorded phase, dependencies, consent, scopes or cost."
+        }
+      ],
+      "impact": "Selective activation and MVP scope discipline impossible to enforce.",
+      "remediation": "Generated capabilities/registry.json with explicit, checked classification; stubs marked STUB with no independent authority.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "capability registry test: ids equal taxonomy, one doc each, phases and dependencies consistent",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0014",
+      "title": "Same-named files with different subjects",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "naming",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "ai-runtime/MODEL_ROUTING.md",
+        "ai-runtime/TOKEN_HARNESS.md",
+        "ai-runtime/CLAUDE_CODE.md",
+        "growth/SOCIALS.md",
+        "state/TECH_DEBT.md",
+        "README.md",
+        "business/COMPETITOR_INTELLIGENCE.md",
+        "MOTION_AND_ANIMATION.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Case-insensitive name collisions with capabilities/ai/{MODEL_ROUTING,TOKEN_HARNESS,CLAUDE_CODE}.md, capabilities/marketing/SOCIALS.md, capabilities/recovery/TECH_DEBT.md, capabilities/docs/README.md; overlapping topics capabilities/marketing/COMPETITORS.md and capabilities/design/MOTION.md."
+        }
+      ],
+      "impact": "Agents may read the stub instead of the canonical contract.",
+      "remediation": "Kept separate (1stStep OS runtime vs generated-project capability); AGENTS.md terminology and hierarchy state stubs carry no authority.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0015",
+      "title": "RETENTION capability name ambiguous",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "naming",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "capabilities/analytics/RETENTION.md",
+        "capabilities/security/RETENTION.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Both files had byte-identical bodies titled 'Retention' although one means user retention and the other data retention."
+        }
+      ],
+      "impact": "Wrong guidance generated for privacy retention.",
+      "remediation": "Retitled 'User Retention' and 'Data Retention'.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0016",
+      "title": "Nested AGENTS.md stub could act as agent instructions",
+      "severity": "HIGH",
+      "domain": "engineering",
+      "category": "security-boundary",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "capabilities/ai/AI_AGENTS.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "capabilities/ai/AGENTS.md existed alongside the root AGENTS.md."
+        },
+        {
+          "state": "INFERRED",
+          "description": "Some coding agents load AGENTS.md files from nested directories as scoped instructions."
+        }
+      ],
+      "impact": "A boilerplate stub could override or dilute canonical authority for work under capabilities/.",
+      "remediation": "Renamed to capabilities/ai/AI_AGENTS.md; AGENTS.md forbids nested AGENTS.md; check enforces; compiler validation forbids them in bundles.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "test: only the root AGENTS.md exists",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0017",
+      "title": "Three divergent premium UI review lists",
+      "severity": "MEDIUM",
+      "domain": "engineering",
+      "category": "duplicated-authority",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "PREMIUM_EXPERIENCE_OS.md",
+        "FRONTEND_QUALITY.md",
+        "DESIGN_REVIEW_GATE.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Each file defined its own review checklist with different items (e.g. beginner clarity only in FRONTEND_QUALITY.md, screen reader only in PREMIUM_EXPERIENCE_OS.md)."
+        }
+      ],
+      "impact": "A milestone could pass one list while failing another.",
+      "remediation": "DESIGN_REVIEW_GATE.md holds the union as gate authority; the other two point to it.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0018",
+      "title": "Routing orders disagree",
+      "severity": "LOW",
+      "domain": "engineering",
+      "category": "conflicting-rules",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "tooling/COST_FIRST_ROUTER.md",
+        "tooling/BUILD_VS_BUY.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "COST_FIRST_ROUTER.md had 6 steps without open source; BUILD_VS_BUY.md asked about open source; the Cycle 0 instruction places open source third."
+        }
+      ],
+      "impact": "Inconsistent build-vs-buy outcomes.",
+      "remediation": "Unified 7-step order with hard filters in COST_FIRST_ROUTER.md; BUILD_VS_BUY.md references it.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0019",
+      "title": "Review gates outside the gates directory naming scheme",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "naming",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "DESIGN_REVIEW_GATE.md",
+        "COST_REVIEW_GATE.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "Numbered gates live in gates/G*.md; the two review gates are root files referenced by name in prompts/CLAUDE_CYCLE0_ADDENDUM.md."
+        }
+      ],
+      "impact": "Gate discovery inconsistent.",
+      "remediation": "Registered as gate ids DESIGN_REVIEW and COST_REVIEW in the schema and hierarchy; files left in place to keep references valid. Moving them is optional future cleanup.",
+      "status": "OPEN"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0020",
+      "title": "Superseded update artifacts in repository root",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "superseded",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "APPLY_THIS_UPDATE.md",
+        "1stStep-OS-Everything-Layer-v0.1.0.zip"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "APPLY_THIS_UPDATE.md is a one-time installation note; the zip is 22 bytes and unzip reports it empty."
+        }
+      ],
+      "impact": "Confusing, non-authoritative files at root.",
+      "remediation": "APPLY_THIS_UPDATE.md annotated as applied/superseded. Zip left for owner removal (agent does not delete user-provided files).",
+      "status": "OPEN"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0021",
+      "title": "FILE_INDEX not verified against the tree",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "index",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "FILE_INDEX.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "No check tied FILE_INDEX.md to actual files."
+        }
+      ],
+      "impact": "Index drift.",
+      "remediation": "Regenerated; npm run check fails on any missing or extra entry.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "test: FILE_INDEX lists every file and no missing files",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0022",
+      "title": "Unreferenced canonical files and unrepresented platforms",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "authority-chain",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "governance/HUMAN_CONTROL.md",
+        "app-dev/PLATFORM_MATRIX.md",
+        "growth/FULL_FUNNEL.md",
+        "DATA_MODEL.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "No authority referenced governance/HUMAN_CONTROL.md, app-dev/PLATFORM_MATRIX.md or growth/FULL_FUNNEL.md; the platform matrix lists bots, AI agents, data pipelines, games and IoT companions that no profile field could express; DATA_MODEL.md lacked the new entities."
+        }
+      ],
+      "impact": "Requirements silently ignored.",
+      "remediation": "Added to hierarchy and ADR-014; product types extended; DATA_MODEL.md extended.",
+      "status": "FIXED_UNVERIFIED"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "id": "F-0023",
+      "title": "Repository is not under version control",
+      "severity": "MEDIUM",
+      "domain": "engineering",
+      "category": "process",
+      "createdAt": "2026-09-13T04:00:00Z",
+      "affectedFiles": [
+        "README.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "No .git directory; git 2.53 is installed."
+        }
+      ],
+      "impact": "Immutability of findings/ADRs, exact change evidence and CI all depend on version history.",
+      "remediation": "Owner decision OD-8 (git hosting + CI); recommended before M1.",
+      "status": "OPEN"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "createdAt": "2026-09-13T07:00:00Z",
+      "id": "F-0024",
+      "title": "Universal LLM addendum arrived mid-cycle and replaced FILE_INDEX.md",
+      "severity": "MEDIUM",
+      "domain": "orchestrator",
+      "category": "index",
+      "affectedFiles": [
+        "FILE_INDEX.md",
+        "1stStep-OS-Universal-LLM-Addendum-v0.1.0.zip"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "FILE_INDEX.md was overwritten with a 15-entry addendum list (full repository index lost); the accompanying zip is 22 bytes and empty; the 15 listed files are present on disk."
+        }
+      ],
+      "impact": "Index no longer described the repository; addendum requirements were not yet in the architecture.",
+      "remediation": "FILE_INDEX.md regenerated for the full tree; requirements incorporated as ADR-012 Amendment A, ProviderPolicy and LLMConnection schemas, and an extended ModelProvider schema.",
+      "status": "VERIFIED",
+      "verification": {
+        "method": "test: FILE_INDEX lists every file; provider-policy and llm-connection fixtures and mutations pass",
+        "result": "PASS",
+        "at": "2026-09-13T09:30:00Z",
+        "by": {
+          "actorType": "AGENT",
+          "actorId": "audit-agent"
+        },
+        "ref": "npm test (tools/spec.test.mjs)"
+      }
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "createdAt": "2026-09-13T07:00:00Z",
+      "id": "F-0025",
+      "title": "Undefined term: Project Genome",
+      "severity": "LOW",
+      "domain": "orchestrator",
+      "category": "ambiguous-terminology",
+      "affectedFiles": [
+        "os/ai/AI_PORTABILITY.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "os/ai/AI_PORTABILITY.md lists \"Project Genome\" as canonical; no other file defines it."
+        }
+      ],
+      "impact": "Agents may invent a new canonical artifact.",
+      "remediation": "Owner to define or remove the term (OD-11); until then it has no schema or authority.",
+      "status": "OPEN"
+    },
+    {
+      "kind": "Finding",
+      "schemaVersion": "0.1.0",
+      "createdAt": "2026-09-13T07:00:00Z",
+      "id": "F-0026",
+      "title": "Provider-specific bias in canonical AI runtime wording",
+      "severity": "LOW",
+      "domain": "engineering",
+      "category": "vendor-neutrality",
+      "affectedFiles": [
+        "architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md",
+        "prompts/CLAUDE_CYCLE0_ADDENDUM.md"
+      ],
+      "evidence": [
+        {
+          "state": "OBSERVED",
+          "description": "ADR-012 listed Anthropic candidates first and the Cycle 0 addendum calls Claude Code first-class, while the Universal LLM addendum forbids canonical workflows requiring a named provider."
+        }
+      ],
+      "impact": "Readers could treat one vendor as the canonical engine.",
+      "remediation": "Amendment A states candidates are non-canonical and Claude Code/Codex are first-class adapters, not privileged engines (strongest-rule principle).",
+      "status": "FIXED_UNVERIFIED"
+    }
+  ]
+}

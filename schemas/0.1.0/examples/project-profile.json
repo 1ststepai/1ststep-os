@@ -1,0 +1,65 @@
+{
+  "kind": "ProjectProfile",
+  "schemaVersion": "0.1.0",
+  "id": "prof_example_petsit",
+  "profileVersion": 3,
+  "createdAt": "2026-09-01T10:00:00Z",
+  "updatedAt": "2026-09-02T15:30:00Z",
+  "mode": { "status": "KNOWN", "value": "BUILD_PRODUCT", "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+  "identity": { "name": { "status": "UNKNOWN" } },
+  "idea": {
+    "originalText": { "text": "An app where neighbours can book trusted pet sitters and pay in the app.", "trust": "USER_INPUT" },
+    "summary": { "status": "KNOWN", "value": "Local marketplace connecting pet owners with vetted neighbourhood pet sitters.", "evidence": "INFERRED", "source": "INFERRED", "confidence": "MEDIUM", "note": "Fixture. Must be confirmed by the user before export." },
+    "problem": { "status": "KNOWN", "value": "Owners struggle to find a trusted sitter at short notice.", "evidence": "ASSUMED", "source": "USER_STATED" }
+  },
+  "targetUsers": { "status": "KNOWN", "value": ["Pet owners in urban neighbourhoods", "Part-time pet sitters"], "evidence": "ASSUMED", "source": "USER_STATED" },
+  "jobsToBeDone": { "status": "UNKNOWN" },
+  "productTypes": { "status": "KNOWN", "value": ["MARKETPLACE"], "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+  "lifecycleStage": { "status": "KNOWN", "value": "IDEA", "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+  "featureScope": { "status": "KNOWN", "value": [{ "id": "feat-booking", "title": "Book a sitter", "priority": "P0" }], "evidence": "ASSUMED", "source": "USER_STATED" },
+  "nonGoals": { "status": "UNKNOWN" },
+  "dataSensitivity": { "status": "KNOWN", "value": ["PERSONAL", "LOCATION"], "evidence": "INFERRED", "source": "RULE_DERIVED" },
+  "auth": {
+    "needed": { "status": "KNOWN", "value": true, "evidence": "INFERRED", "source": "RULE_DERIVED" },
+    "methods": { "status": "UNKNOWN" },
+    "multiTenant": { "status": "NOT_APPLICABLE", "note": "Consumer marketplace; no organisation tenancy." }
+  },
+  "payments": {
+    "needed": { "status": "KNOWN", "value": true, "evidence": "CONFIRMED", "source": "USER_STATED" },
+    "handlesCardData": { "status": "UNKNOWN" }
+  },
+  "ai": {
+    "usesAI": { "status": "DECLINED", "note": "User chose to decide later." },
+    "userDataSentToModels": { "status": "UNKNOWN" },
+    "autonomousExternalActions": { "status": "UNKNOWN" }
+  },
+  "integrations": { "status": "KNOWN", "value": [], "evidence": "CONFIRMED", "source": "USER_CONFIRMED", "note": "Confirmed none (known and empty, not unknown)." },
+  "platformTargets": { "status": "KNOWN", "value": ["WEB", "IOS"], "evidence": "ASSUMED", "source": "USER_STATED" },
+  "geography": { "markets": { "status": "KNOWN", "value": ["GB"], "evidence": "CONFIRMED", "source": "USER_STATED" } },
+  "businessModel": { "status": "KNOWN", "value": ["COMMISSION"], "evidence": "INFERRED", "source": "INFERRED", "confidence": "LOW", "claimIds": ["claim_example_pricing_1"] },
+  "distributionModel": { "status": "UNKNOWN" },
+  "growthGoals": { "status": "UNKNOWN" },
+  "capabilityRequests": { "status": "KNOWN", "value": [], "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+  "businessOperations": { "status": "NOT_APPLICABLE" },
+  "budget": {
+    "toolsMonthlyUsd": { "status": "UNKNOWN" },
+    "aiMonthlyUsd": { "status": "UNKNOWN" },
+    "hourlyValueUsd": { "status": "NOT_APPLICABLE" }
+  },
+  "riskClassification": {
+    "level": { "status": "KNOWN", "value": "MODERATE", "evidence": "INFERRED", "source": "RULE_DERIVED" },
+    "factors": [
+      { "code": "PAYMENT_PROCESSING", "rationale": "payments.needed is KNOWN true." },
+      { "code": "LOCATION_DATA", "rationale": "dataSensitivity includes LOCATION." }
+    ],
+    "rulesetVersion": "0.1.0"
+  },
+  "stackRecommendation": { "status": "UNKNOWN" },
+  "selectedModules": { "status": "UNKNOWN" },
+  "assumptions": [
+    { "id": "asm-1", "statement": "Sitters are independent contractors, not employees.", "evidence": "ASSUMED", "impactIfWrong": "Changes legal, payments and operations modules.", "confirmedByUser": false }
+  ],
+  "unresolvedDecisions": [
+    { "id": "dec-ai-usesAI", "question": "Will the product use AI features?", "whyItMatters": "Determines whether the AI module, its security gates and AI cost review are included.", "blocking": true, "field": "ai.usesAI", "options": ["Yes", "No", "Decide later"] }
+  ]
+}

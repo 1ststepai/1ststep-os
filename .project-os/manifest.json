@@ -1,0 +1,54 @@
+{
+  "osVersion": "0.3.0",
+  "schemaVersion": "0.1.0",
+  "product": "1stStep OS",
+  "parentBrand": "1stStep.ai",
+  "publicPath": "/os",
+  "coreSpecification": "Project OS",
+  "phase": 0,
+  "platformPhase": "P0",
+  "status": "CYCLE_0_COMPLETE",
+  "domains": [
+    "orchestrator",
+    "engineering",
+    "business-intelligence",
+    "growth",
+    "operations"
+  ],
+  "evidenceStates": [
+    "CONFIRMED",
+    "OBSERVED",
+    "INFERRED",
+    "ASSUMED",
+    "UNVERIFIED",
+    "BLOCKED"
+  ],
+  "authorityOrder": [
+    "AGENTS.md",
+    "PROJECT.md",
+    "PRODUCT_REQUIREMENTS.md",
+    "ARCHITECTURE.md",
+    "SECURITY.md",
+    "EXTERNAL_ACTIONS.md",
+    "RESEARCH_POLICY.md",
+    "DECISIONS.md",
+    "SCHEMAS.md",
+    "GENERATION_CONTRACT.md",
+    "AI_RUNTIME_OS.md",
+    "PREMIUM_EXPERIENCE_OS.md",
+    "EVERYTHING_OS.md",
+    "state/CURRENT_STATE.md"
+  ],
+  "architectureDecisions": [
+    "architecture/decisions/ADR-010-mvp-application-architecture.md",
+    "architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md",
+    "architecture/decisions/ADR-013-premium-experience-architecture.md",
+    "architecture/decisions/ADR-014-capabilities-media-automation-business-owner.md"
+  ],
+  "registries": {
+    "modules": "modules/registry.json",
+    "capabilities": "capabilities/registry.json"
+  },
+  "externalActionDefault": "deny_external_write",
+  "vendorNeutral": true
+}

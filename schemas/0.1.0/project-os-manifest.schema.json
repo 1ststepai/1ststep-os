@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/project-os-manifest.schema.json",
+  "title": "ProjectOSManifest",
+  "description": "Manifest of a generated Project OS bundle. Lists every file with its hash so exports can be integrity-checked and reproduced (GENERATION_CONTRACT.md).",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "osSpecVersion", "generator", "project", "generatedAt", "sourceProfile",
+    "inputsHash", "platformPhase", "modules", "deferredModules", "capabilities", "agents", "providerAdapters",
+    "authorityOrder", "evidenceVocabulary", "files", "compatibility"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ProjectOSManifest" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "osSpecVersion": { "$ref": "common.schema.json#/$defs/semver" },
+    "generator": {
+      "type": "object",
+      "required": ["name", "compilerVersion", "templateSetVersion", "registryVersion"],
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "compilerVersion": { "$ref": "common.schema.json#/$defs/semver" },
+        "templateSetVersion": { "$ref": "common.schema.json#/$defs/semver" },
+        "registryVersion": { "$ref": "common.schema.json#/$defs/semver" }
+      },
+      "additionalProperties": false
+    },
+    "project": {
+      "type": "object",
+      "required": ["name", "projectVersion"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "projectVersion": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "generatedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "sourceProfile": {
+      "type": "object",
+      "required": ["profileId", "profileVersion", "sha256"],
+      "properties": {
+        "profileId": { "$ref": "common.schema.json#/$defs/id" },
+        "profileVersion": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "inputsHash": {
+      "description": "sha256 of the RFC 8785 canonical JSON of all compile inputs, including generatedAt.",
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "platformPhase": { "$ref": "common.schema.json#/$defs/phase" },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "reason"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/moduleId" },
+          "version": { "$ref": "common.schema.json#/$defs/semver" },
+          "reason": { "enum": ["ALWAYS", "RULE_MATCH", "DEPENDENCY", "USER_ADDED"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "deferredModules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "reason"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/moduleId" },
+          "reason": { "enum": ["PHASE_NOT_AVAILABLE", "BLOCKING_DECISION", "CONSENT_REQUIRED"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "generationPhase"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/capabilityId" },
+          "generationPhase": { "$ref": "common.schema.json#/$defs/phase" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+          "path": { "$ref": "common.schema.json#/$defs/relativePath" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "providerAdapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "files"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$", "description": "Adapter id. P0: generic, claude, codex, cursor. Later: gemini, copilot, windsurf, local agents, custom." },
+          "version": { "$ref": "common.schema.json#/$defs/semver" },
+          "files": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/relativePath" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "authorityOrder": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/relativePath" } },
+    "evidenceVocabulary": { "const": ["CONFIRMED", "OBSERVED", "INFERRED", "ASSUMED", "UNVERIFIED", "BLOCKED"] },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes", "origin", "authority"],
+        "properties": {
+          "path": { "$ref": "common.schema.json#/$defs/relativePath" },
+          "sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+          "bytes": { "type": "integer", "minimum": 0, "maximum": 2000000 },
+          "origin": { "enum": ["TEMPLATE", "TEMPLATE_WITH_STORED_AI_TEXT", "ADAPTER", "STATE"] },
+          "authority": { "enum": ["CANONICAL", "ADAPTER"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["minReaderSchemaVersion", "migratedFrom"],
+      "properties": {
+        "minReaderSchemaVersion": { "$ref": "common.schema.json#/$defs/semver" },
+        "migratedFrom": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/semver" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

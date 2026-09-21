@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/research-claim.schema.json",
+  "title": "ResearchClaim",
+  "description": "One atomic research claim with provenance. Three independent axes: claimType (what kind of statement), evidence (how it was established), confidence (how much to rely on it). See RESEARCH_POLICY.md.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "projectId", "questionId", "topic", "claimType", "claim",
+    "evidence", "confidence", "sources", "freshness", "recommendationIds", "createdBy", "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ResearchClaim" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "questionId": { "$ref": "common.schema.json#/$defs/id" },
+    "topic": { "$ref": "#/$defs/topic" },
+    "claimType": { "enum": ["FACT", "ESTIMATE", "INFERENCE", "SENTIMENT"] },
+    "claim": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceState" },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "derivedFromClaimIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "estimateMethod": { "type": "string", "maxLength": 2000 },
+    "review": {
+      "description": "Human verification against a primary source. Required for CONFIRMED.",
+      "type": "object",
+      "required": ["reviewer", "reviewedAt"],
+      "properties": {
+        "reviewer": { "$ref": "common.schema.json#/$defs/userActor" },
+        "reviewedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "note": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "freshness": {
+      "type": "object",
+      "required": ["windowDays", "expiresAt"],
+      "properties": {
+        "windowDays": { "type": "integer", "minimum": 1, "maximum": 3650 },
+        "expiresAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "recommendationIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "supersedes": { "$ref": "common.schema.json#/$defs/id" },
+    "blockedReason": { "type": "string", "maxLength": 2000 },
+    "createdBy": { "$ref": "common.schema.json#/$defs/actor" },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "evidence": { "enum": ["CONFIRMED", "OBSERVED"] } } },
+      "then": { "properties": { "sources": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "evidence": { "const": "CONFIRMED" } } },
+      "then": { "required": ["review"] }
+    },
+    {
+      "if": { "properties": { "evidence": { "const": "INFERRED" } } },
+      "then": {
+        "anyOf": [
+          { "properties": { "sources": { "minItems": 1 } } },
+          { "required": ["derivedFromClaimIds"], "properties": { "derivedFromClaimIds": { "minItems": 1 } } }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "evidence": { "const": "BLOCKED" } } },
+      "then": { "required": ["blockedReason"] }
+    },
+    {
+      "if": { "properties": { "claimType": { "const": "ESTIMATE" } } },
+      "then": { "required": ["estimateMethod"] }
+    }
+  ],
+  "$defs": {
+    "topic": { "enum": ["MARKET", "CUSTOMER", "COMPETITOR", "SUBSTITUTE", "PRICING", "POSITIONING", "BRAND", "CHANNEL", "REGULATORY", "TECHNICAL"] },
+    "source": {
+      "type": "object",
+      "required": ["url", "title", "sourceType", "retrievalMethod", "retrievedAt", "publishedAt", "contentHash"],
+      "properties": {
+        "url": { "$ref": "common.schema.json#/$defs/httpsUrl" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "publisher": { "type": "string", "maxLength": 200 },
+        "sourceType": { "enum": ["PRIMARY", "SECONDARY", "COMMUNITY", "SEARCH_SNIPPET", "USER_PROVIDED"] },
+        "retrievalMethod": { "enum": ["FETCH", "SEARCH_API", "MODEL_TOOL", "USER_UPLOAD"] },
+        "retrievedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "publishedAt": {
+          "oneOf": [
+            { "$ref": "common.schema.json#/$defs/timestamp" },
+            { "type": "object", "required": ["status"], "properties": { "status": { "const": "UNKNOWN" } }, "additionalProperties": false }
+          ]
+        },
+        "excerpt": { "type": "string", "maxLength": 500, "description": "Short verbatim excerpt; must be present in the fetched content (checked by code)." },
+        "contentHash": { "$ref": "common.schema.json#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

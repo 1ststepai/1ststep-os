@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/model-provider.schema.json",
+  "title": "ModelProvider",
+  "description": "Registry entry for one model on one provider or endpoint: hosted API, enterprise gateway, cloud platform, self-hosted, local or custom (os/ai/PROVIDER_CAPABILITY_CONTRACT.md). The router operates on these capabilities, never on brand names. A model whose price is not KNOWN cannot be ACTIVE because budget reservation needs a price; local/self-hosted models record an estimated price.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "provider", "modelId", "hosting", "endpointType", "authMethod", "tier", "modalities",
+    "features", "limits", "pricing", "dataPolicy", "residency", "fineTuning", "health", "status", "lastVerified", "evidence", "evalResults", "fallbackModelIds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ModelProvider" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "provider": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "modelId": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "modelVersion": { "type": "string", "maxLength": 100 },
+    "hosting": { "$ref": "provider-policy.schema.json#/$defs/hosting" },
+    "endpointType": { "enum": ["NATIVE_PROVIDER_API", "OPENAI_COMPATIBLE", "ANTHROPIC_COMPATIBLE", "CLOUD_PLATFORM_API", "CUSTOM_ADAPTER"] },
+    "authMethod": { "enum": ["API_KEY", "OAUTH2", "SERVICE_ACCOUNT", "NONE"] },
+    "connectionId": { "$ref": "common.schema.json#/$defs/id", "description": "Set for BYO models (LLMConnection)." },
+    "tier": { "enum": ["B_LOW_COST", "C_BALANCED", "D_PREMIUM"], "description": "Tier A is deterministic work and never has a model." },
+    "modalities": {
+      "type": "object",
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["TEXT", "IMAGE", "AUDIO", "VIDEO", "FILE"] } },
+        "output": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["TEXT", "IMAGE", "AUDIO", "VIDEO", "EMBEDDING", "MODEL_3D"] } }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object",
+      "required": ["structuredOutput", "toolUse", "promptCaching", "streaming", "batch", "embeddings", "codeExecution"],
+      "properties": {
+        "structuredOutput": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "toolUse": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "promptCaching": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "streaming": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "batch": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "embeddings": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "codeExecution": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "required": ["contextWindowTokens", "maxOutputTokens", "rateLimits", "latencyProfile"],
+      "properties": {
+        "contextWindowTokens": { "$ref": "common.schema.json#/$defs/knownInteger" },
+        "maxOutputTokens": { "$ref": "common.schema.json#/$defs/knownInteger" },
+        "rateLimits": { "$ref": "common.schema.json#/$defs/knownString" },
+        "latencyProfile": { "$ref": "common.schema.json#/$defs/knownString" },
+        "hardwareConstraints": { "$ref": "common.schema.json#/$defs/knownString" }
+      },
+      "additionalProperties": false
+    },
+    "pricing": {
+      "type": "object",
+      "required": ["currency", "unit", "basis", "input", "output", "cachedInput"],
+      "properties": {
+        "currency": { "const": "USD" },
+        "unit": { "enum": ["PER_MILLION_TOKENS", "PER_IMAGE", "PER_SECOND_AUDIO", "PER_SECOND_VIDEO", "PER_CHARACTER", "PER_REQUEST"] },
+        "basis": { "enum": ["PUBLISHED_LIST_PRICE", "NEGOTIATED_CONTRACT", "ESTIMATED_INFRASTRUCTURE_COST", "SUBSCRIPTION_INCLUDED"] },
+        "input": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "output": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "cachedInput": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "sourceUrl": { "$ref": "common.schema.json#/$defs/httpsUrl" }
+      },
+      "additionalProperties": false
+    },
+    "dataPolicy": {
+      "type": "object",
+      "required": ["retention", "trainsOnCustomerData", "zeroDataRetentionAvailable"],
+      "properties": {
+        "retention": { "$ref": "common.schema.json#/$defs/knownString" },
+        "trainsOnCustomerData": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "zeroDataRetentionAvailable": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "residency": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "fineTuning": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+    "health": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["HEALTHY", "DEGRADED", "DOWN", "UNKNOWN"] },
+        "checkedAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["CANDIDATE", "ACTIVE", "DEPRECATED", "DISABLED"] },
+    "lastVerified": { "$ref": "common.schema.json#/$defs/knownTimestamp" },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceState" },
+    "evalResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["taskId", "evalSetVersion", "score", "passed", "at"],
+        "properties": {
+          "taskId": { "$ref": "common.schema.json#/$defs/id" },
+          "evalSetVersion": { "$ref": "common.schema.json#/$defs/semver" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "passed": { "type": "boolean" },
+          "structuredOutputValidityRate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "errorRate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "toolReliability": { "type": "number", "minimum": 0, "maximum": 1 },
+          "p50LatencyMs": { "type": "integer", "minimum": 0 },
+          "costPerTaskUsd": { "type": "number", "minimum": 0 },
+          "humanReviewScore": { "type": "number", "minimum": 0, "maximum": 1 },
+          "at": { "$ref": "common.schema.json#/$defs/timestamp" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "fallbackModelIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "ACTIVE" } } },
+      "then": {
+        "properties": {
+          "pricing": {
+            "properties": {
+              "input": { "properties": { "status": { "const": "KNOWN" } } },
+              "output": { "properties": { "status": { "const": "KNOWN" } } }
+            }
+          },
+          "lastVerified": { "properties": { "status": { "const": "KNOWN" } } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "hosting": { "enum": ["LOCAL", "SELF_HOSTED", "CUSTOM_ENDPOINT", "ENTERPRISE_GATEWAY"] } } },
+      "then": { "required": ["connectionId"] }
+    }
+  ]
+}

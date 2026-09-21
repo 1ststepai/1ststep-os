@@ -1,0 +1,21 @@
+{
+  "moduleRegistry": "modules/registry.json",
+  "capabilityRegistry": "capabilities/registry.json",
+  "selectionSpec": "tooling/CAPABILITY_REGISTRY.md",
+  "platformPhase": "P0",
+  "selectionInputs": [
+    "mode",
+    "productTypes",
+    "platformTargets",
+    "lifecycleStage",
+    "dataSensitivity",
+    "businessModel",
+    "distributionModel",
+    "integrations",
+    "capabilityRequests",
+    "auth.needed",
+    "payments.needed",
+    "ai.usesAI",
+    "riskClassification.level"
+  ]
+}

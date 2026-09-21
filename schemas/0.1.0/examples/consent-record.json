@@ -1,0 +1,24 @@
+{
+  "kind": "ConsentRecord",
+  "schemaVersion": "0.1.0",
+  "id": "consent_example_founder_voice",
+  "projectId": "proj_example_petsit",
+  "subject": { "subjectType": "ACCOUNT_HOLDER_SELF", "displayName": "Founder (fixture)" },
+  "identityTypes": ["VOICE"],
+  "lawfulBasis": "EXPLICIT_CONSENT",
+  "permittedUses": ["SYNTHETIC_SPEECH"],
+  "prohibitedUses": ["Political or endorsement content", "Use outside the listed project"],
+  "scope": {
+    "projectIds": ["proj_example_petsit"],
+    "channels": { "status": "KNOWN", "value": ["product demo videos"], "evidence": "CONFIRMED", "source": "USER_STATED" },
+    "territories": { "status": "UNKNOWN" },
+    "languages": { "status": "KNOWN", "value": ["en"], "evidence": "CONFIRMED", "source": "USER_STATED" }
+  },
+  "evidence": { "method": "SIGNED_DOCUMENT", "artifactHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "capturedAt": "2026-09-01T09:00:00Z" },
+  "status": "ACTIVE",
+  "verification": { "verifiedBy": { "actorType": "USER", "actorId": "user_example_reviewer" }, "verifiedAt": "2026-09-01T10:00:00Z", "method": "Document signature checked against account identity (fixture)." },
+  "validFrom": "2026-09-01T10:00:00Z",
+  "expiresAt": "2027-09-01T10:00:00Z",
+  "recordedBy": { "actorType": "USER", "actorId": "user_example" },
+  "recordedAt": "2026-09-01T09:05:00Z"
+}

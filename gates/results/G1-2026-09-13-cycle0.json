@@ -1,0 +1,84 @@
+{
+  "kind": "GateResult",
+  "schemaVersion": "0.1.0",
+  "id": "gate-G1-2026-09-13-cycle0",
+  "gate": "G1",
+  "subject": { "type": "CYCLE", "ref": "Cycle 0 — 1stStep OS architecture and canonical contracts" },
+  "result": "PASS",
+  "evaluatedAt": "2026-09-13T07:30:00Z",
+  "evaluator": { "actorType": "AGENT", "actorId": "architect-agent" },
+  "criteria": [
+    {
+      "id": "g1-application-architecture",
+      "description": "Implementation architecture decided with recommended option, alternatives, tradeoffs, cost, lock-in, security, scaling and migration for every required area (runtime, database, authn, authz/multitenancy, storage, jobs, deployment, observability, testing, AI, research, media/model, connectors, capability registry, selection engine, compiler, export, future recovery, future continuous intelligence).",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "ADR-010 decisions D1-D19 each list all required attributes; open decisions OD-1..OD-10 carry owner, blocking milestone and default.", "ref": "architecture/decisions/ADR-010-mvp-application-architecture.md" } ]
+    },
+    {
+      "id": "g1-ai-runtime-cost-harness",
+      "description": "Credible plan for AI token/cost control and provider neutrality (Cycle 0 addendum and Universal LLM addendum requirements).",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "ADR-012 covers deterministic vs AI work, TaskSpec classification, provider-neutral ModelClient with Anthropic and OpenAI adapters, Claude Code/Codex adapters, context assembly, retrieval, indexing, compaction, caching, retry/fallback, structured-output validation, eval-driven routing, reservation budgets, telemetry, worst-case unit cost, and a COST_REVIEW mapping table.", "ref": "architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md" },
+        { "state": "OBSERVED", "description": "Amendment A: policy before routing, endpoint-type adapters, BYO LLM with SSRF boundary, local/self-hosted boundaries, portable checkpoints, failover preserving run identity, eval registry; ProviderPolicy and LLMConnection schemas with rejecting mutations.", "ref": "architecture/decisions/ADR-012-ai-runtime-and-cost-harness.md#amendment-a--universal-llm-architecture-2026-09-13" }
+      ]
+    },
+    {
+      "id": "g1-premium-experience",
+      "description": "Credible plan for premium production UI/UX (design system, tokens, components, motion, accessibility, responsive, visual regression, states, performance budgets, review process).",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "ADR-013 sections 1-12 with CI-enforced budgets and DESIGN_REVIEW gate; consolidated gate criteria in DESIGN_REVIEW_GATE.md; locked brand mark per ADR-011.", "ref": "architecture/decisions/ADR-013-premium-experience-architecture.md" } ]
+    },
+    {
+      "id": "g1-canonical-schemas",
+      "description": "Versioned machine-readable schemas for all required types compile, fixtures validate, and unknown/unverified is never confused with false/empty.",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "npm run check (2026-09-13): 'all schemas compile' PASS (20 schema files: 17 required types + common + 2 registries), 'every required schema exists and has a valid fixture' PASS (15 fixtures), 'negative mutations are rejected' PASS (48 mutations, including UNKNOWN-with-value, KNOWN-without-value, null and bare false/[] instead of assessments).", "ref": "tools/spec.test.mjs" } ]
+    },
+    {
+      "id": "g1-capability-module-system",
+      "description": "Capability registry and module registry define applicability, dependencies, conflicts, required files/agents/gates, adapters, phases; selection algorithm is deterministic and specified.",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "npm run check: capability registry matches taxonomy (301) and is consistent; module registry (22) valid and referentially consistent; every capability reachable through a module.", "ref": "capabilities/registry.json; modules/registry.json" },
+        { "state": "OBSERVED", "description": "Selection semantics specified step by step with required golden tests.", "ref": "tooling/CAPABILITY_REGISTRY.md" }
+      ]
+    },
+    {
+      "id": "g1-generation-research-actions",
+      "description": "Generation contract, research contract and external-action permission model are defined without contradictions.",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "GENERATION_CONTRACT.md defines determinism boundary, AI-allowed slots, schema-driven outputs, validation, errors, versioning, reproducibility and export integrity.", "ref": "GENERATION_CONTRACT.md" },
+        { "state": "OBSERVED", "description": "RESEARCH_POLICY.md research contract covers request, sourcing, storage, freshness, confidence, citation and canonicalization rule.", "ref": "RESEARCH_POLICY.md" },
+        { "state": "OBSERVED", "description": "EXTERNAL_ACTIONS.md unified scopes and tiers; machine state test confirms permissions.json scopes equal schema enum and defaults agree.", "ref": "EXTERNAL_ACTIONS.md" }
+      ]
+    },
+    {
+      "id": "g1-scope-and-milestones",
+      "description": "MVP scope classified P0/P1/P2/LATER and milestones are independently verifiable with tests, cost, security and gates.",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "plan/SCOPE.md area table (generation vs execution) plus Universal LLM rows; plan/MVP_MILESTONES.md M0-M8 with all required fields.", "ref": "plan/SCOPE.md; plan/MVP_MILESTONES.md" } ]
+    },
+    {
+      "id": "g1-no-blocking-contradiction",
+      "description": "No unresolved HIGH/CRITICAL finding or authority contradiction blocks scaffolding.",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "audit/findings.json: 26 findings; open items F-0019 (LOW), F-0020 (LOW), F-0023 (MEDIUM, version control), F-0025 (LOW) do not affect the scaffold; all HIGH findings (F-0001, F-0007, F-0016) remediated.", "ref": "audit/findings.json" } ]
+    },
+    {
+      "id": "g1-no-external-side-effects",
+      "description": "Cycle 0 performed no deployment, posting, submission, account creation, billing change, voice cloning or invented research.",
+      "result": "PASS",
+      "evidence": [ { "state": "OBSERVED", "description": "Only outbound activity was npm registry package installation (ajv, ajv-formats); no web research; fixtures labelled as fixtures.", "ref": "handoffs/2026-09-13-cycle0.md" } ]
+    }
+  ],
+  "blockers": [],
+  "nonBlockingOpenItems": [
+    "Owner decisions OD-1..OD-10 (ADR-010) and OD-11 (1stStep OS Audit integration scope and 'Project Genome' definition).",
+    "Product-owner ratification of ADR-010, ADR-012..ADR-020 and PRD additions.",
+    "Repository not under version control (F-0023) — recommended before M1.",
+    "FILE_INDEX.md and state mirrors regenerated at cycle close; full check re-run recorded in handoff."
+  ],
+  "ratification": { "state": "PENDING" }
+}

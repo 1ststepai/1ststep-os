@@ -1,0 +1,37 @@
+{
+  "kind": "MediaAsset",
+  "schemaVersion": "0.1.0",
+  "id": "asset_example_voiceover_v2",
+  "projectId": "proj_example_petsit",
+  "assetType": "CLONED_VOICEOVER",
+  "title": "Founder demo voiceover (fixture; no real cloning)",
+  "version": 2,
+  "parentAssetIds": ["asset_example_script_v1"],
+  "brandSourceAssetId": "asset_example_brand_source",
+  "status": "APPROVED",
+  "production": {
+    "method": "AI_GENERATED",
+    "operation": "synthetic_speech",
+    "modelProviderId": "model_example_tts",
+    "promptHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cost": { "status": "UNKNOWN" }
+  },
+  "provenance": {
+    "createdBy": { "actorType": "SYSTEM", "actorId": "media-factory" },
+    "createdAt": "2026-09-02T12:00:00Z",
+    "contentHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceAssetHashes": [],
+    "contentCredentialsAttached": { "status": "UNKNOWN" },
+    "aiDisclosureRequired": { "status": "KNOWN", "value": true, "evidence": "ASSUMED", "source": "DEFAULTED" }
+  },
+  "rights": {
+    "license": { "status": "KNOWN", "value": "OWNED", "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+    "commercialUse": { "status": "KNOWN", "value": true, "evidence": "CONFIRMED", "source": "USER_CONFIRMED" },
+    "attributionRequired": { "status": "KNOWN", "value": false, "evidence": "CONFIRMED", "source": "USER_CONFIRMED" }
+  },
+  "identitySubjects": [ { "identityType": "VOICE", "subjectLabel": "Founder (fixture)", "consentRecordId": "consent_example_founder_voice" } ],
+  "variants": [ { "platform": "web", "aspectRatio": "16:9", "locale": "en-GB", "durationSeconds": 45 } ],
+  "brandCheck": { "status": "PASS", "checkedAt": "2026-09-02T12:10:00Z" },
+  "storage": { "ref": "projects/proj_example_petsit/assets/voiceover-v2.mp3", "mimeType": "audio/mpeg", "bytes": 0 },
+  "createdAt": "2026-09-02T12:00:00Z"
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "ExternalAction",
+  "schemaVersion": "0.1.0",
+  "id": "act_example_launch_post",
+  "projectId": "proj_example_petsit",
+  "idempotencyKey": "proj_example_petsit:publish:launch-post:v1",
+  "requiredScope": "publish",
+  "riskTier": "T2_APPROVAL_REQUIRED",
+  "executionMode": "MANUAL_BY_USER",
+  "target": { "platform": "example-social", "service": "example.invalid", "accountRef": "handle:example" },
+  "payloadSummary": "Launch announcement post (fixture; never executed).",
+  "payloadHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "authorization": { "grantedScopes": ["draft", "publish"], "grantedBy": { "actorType": "USER", "actorId": "user_example" }, "grantedAt": "2026-09-02T14:00:00Z", "expiresAt": "2026-09-09T14:00:00Z" },
+  "approval": { "state": "APPROVED", "approver": { "actorType": "USER", "actorId": "user_example" }, "approvedAt": "2026-09-02T14:05:00Z", "approvedPayloadHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" },
+  "status": "APPROVED",
+  "attempts": [],
+  "evidence": [],
+  "reversal": { "status": "KNOWN", "value": "Delete the post from the platform.", "evidence": "ASSUMED", "source": "DEFAULTED" },
+  "createdBy": { "actorType": "AGENT", "actorId": "social-agent" },
+  "createdAt": "2026-09-02T13:55:00Z"
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/handoff.schema.json",
+  "title": "Handoff",
+  "description": "End-of-cycle handoff: exact files changed, checks run, gate status, blockers, and the next recommended cycle.",
+  "type": "object",
+  "required": ["kind", "schemaVersion", "id", "date", "cycle", "author", "summary", "filesChanged", "checks", "gates", "blockers", "openDecisions", "nextRecommendedCycle"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "Handoff" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "date": { "type": "string", "format": "date" },
+    "cycle": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "author": { "$ref": "common.schema.json#/$defs/actor" },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 8000 },
+    "filesChanged": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "change"],
+        "properties": {
+          "path": { "$ref": "common.schema.json#/$defs/relativePath" },
+          "change": { "enum": ["ADDED", "MODIFIED", "RENAMED", "DELETED"] },
+          "from": { "$ref": "common.schema.json#/$defs/relativePath" }
+        },
+        "additionalProperties": false,
+        "if": { "properties": { "change": { "const": "RENAMED" } } },
+        "then": { "required": ["from"] }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "command", "result", "summary"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 200 },
+          "command": { "type": "string", "maxLength": 500 },
+          "result": { "enum": ["PASS", "FAIL", "NOT_RUN"] },
+          "summary": { "type": "string", "maxLength": 4000 },
+          "at": { "$ref": "common.schema.json#/$defs/timestamp" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gate", "result"],
+        "properties": {
+          "gate": { "$ref": "common.schema.json#/$defs/gateId" },
+          "result": { "enum": ["PASS", "FAIL", "BLOCKED", "NOT_APPLICABLE", "NOT_EVALUATED"] },
+          "ref": { "$ref": "common.schema.json#/$defs/relativePath" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "blockers": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+    "openDecisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "blocks"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "question": { "type": "string", "maxLength": 1000 },
+          "blocks": { "type": "string", "maxLength": 300 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "nextRecommendedCycle": {
+      "type": "object",
+      "required": ["objective", "milestoneIds", "entryCriteria"],
+      "properties": {
+        "objective": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "milestoneIds": { "type": "array", "items": { "type": "string", "pattern": "^M[0-9]+$" } },
+        "entryCriteria": { "type": "array", "items": { "type": "string", "maxLength": 1000 } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

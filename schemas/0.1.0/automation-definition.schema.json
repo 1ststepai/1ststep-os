@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/automation-definition.schema.json",
+  "title": "AutomationDefinition",
+  "description": "Automation Engine definition: trigger → conditions → steps with idempotency, bounded retries, failure queue, owner, pause/kill switch, audit trail and ROI (automation/AUTOMATION_ENGINE.md). Writes to external systems stay governed by EXTERNAL_ACTIONS.md.",
+  "type": "object",
+  "required": ["kind", "schemaVersion", "id", "projectId", "name", "owner", "status", "automationType", "trigger", "conditions", "steps", "retry", "failureQueue", "controls", "observability", "audit", "roi", "riskLevel", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "AutomationDefinition" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "projectId": { "$ref": "common.schema.json#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "owner": { "$ref": "common.schema.json#/$defs/userActor" },
+    "status": { "enum": ["DRAFT", "ACTIVE", "PAUSED", "KILLED", "DISABLED"] },
+    "automationType": { "enum": ["SCHEDULED", "EVENT_WEBHOOK", "CONDITIONAL_MONITOR", "PIPELINE", "APPROVAL_WORKFLOW", "BATCH", "DATA_SYNC", "REPORTING", "LIFECYCLE_MESSAGING"] },
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["SCHEDULE", "WEBHOOK", "EVENT", "CONDITION", "MANUAL"] },
+        "schedule": {
+          "type": "object",
+          "required": ["cron", "timezone"],
+          "properties": {
+            "cron": { "type": "string", "pattern": "^\\S+( \\S+){4}$" },
+            "timezone": { "type": "string", "minLength": 1, "maxLength": 64 }
+          },
+          "additionalProperties": false
+        },
+        "webhook": {
+          "type": "object",
+          "required": ["verification", "replayWindowSeconds"],
+          "properties": {
+            "verification": { "enum": ["HMAC_SIGNATURE", "PROVIDER_SIGNATURE", "MTLS"] },
+            "replayWindowSeconds": { "type": "integer", "minimum": 1, "maximum": 3600 }
+          },
+          "additionalProperties": false
+        },
+        "event": {
+          "type": "object",
+          "required": ["source", "name"],
+          "properties": { "source": { "type": "string", "maxLength": 200 }, "name": { "type": "string", "maxLength": 200 } },
+          "additionalProperties": false
+        },
+        "condition": {
+          "type": "object",
+          "required": ["expression", "pollIntervalMinutes"],
+          "properties": {
+            "expression": { "type": "string", "maxLength": 2000 },
+            "pollIntervalMinutes": { "type": "integer", "minimum": 5 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "SCHEDULE" } } }, "then": { "required": ["schedule"] } },
+        { "if": { "properties": { "type": { "const": "WEBHOOK" } } }, "then": { "required": ["webhook"] } },
+        { "if": { "properties": { "type": { "const": "EVENT" } } }, "then": { "required": ["event"] } },
+        { "if": { "properties": { "type": { "const": "CONDITION" } } }, "then": { "required": ["condition"] } }
+      ]
+    },
+    "conditions": { "type": "array", "items": { "type": "string", "maxLength": 2000 } },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "requiredScope", "approval", "idempotencyKeyTemplate", "timeoutSeconds"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "toolProviderId": { "$ref": "common.schema.json#/$defs/id" },
+          "requiredScope": { "enum": ["read", "draft", "publish", "deploy", "billing", "destructive"], "description": "account_create is never automated." },
+          "approval": { "enum": ["NONE", "REQUIRED", "HIGH_RISK"] },
+          "idempotencyKeyTemplate": { "type": "string", "minLength": 3, "maxLength": 300 },
+          "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 3600 }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          { "if": { "properties": { "requiredScope": { "const": "publish" } } }, "then": { "properties": { "approval": { "enum": ["REQUIRED", "HIGH_RISK"] } } } },
+          { "if": { "properties": { "requiredScope": { "enum": ["deploy", "billing", "destructive"] } } }, "then": { "properties": { "approval": { "const": "HIGH_RISK" } } } }
+        ]
+      }
+    },
+    "retry": {
+      "type": "object",
+      "required": ["maxAttempts", "backoff", "retryOn"],
+      "properties": {
+        "maxAttempts": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "backoff": { "enum": ["EXPONENTIAL", "FIXED", "NONE"] },
+        "retryOn": { "type": "array", "uniqueItems": true, "items": { "enum": ["TIMEOUT", "RATE_LIMIT", "TRANSIENT"] } }
+      },
+      "additionalProperties": false
+    },
+    "failureQueue": {
+      "type": "object",
+      "required": ["enabled", "retentionDays", "notifyOwner"],
+      "properties": {
+        "enabled": { "const": true },
+        "retentionDays": { "type": "integer", "minimum": 1, "maximum": 365 },
+        "notifyOwner": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "controls": {
+      "type": "object",
+      "required": ["pauseSupported", "killSwitch", "maxRunsPerDay", "budgetCeilingUsdPerMonth", "dryRunAvailable"],
+      "properties": {
+        "pauseSupported": { "const": true },
+        "killSwitch": { "const": true },
+        "maxRunsPerDay": { "type": "integer", "minimum": 1 },
+        "budgetCeilingUsdPerMonth": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "dryRunAvailable": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "observability": {
+      "type": "object",
+      "required": ["runLog", "metrics"],
+      "properties": {
+        "runLog": { "const": true },
+        "metrics": { "type": "array", "items": { "type": "string", "maxLength": 100 } }
+      },
+      "additionalProperties": false
+    },
+    "audit": {
+      "type": "object",
+      "required": ["auditTrail"],
+      "properties": { "auditTrail": { "const": true } },
+      "additionalProperties": false
+    },
+    "roi": {
+      "type": "object",
+      "required": ["baselineMinutesPerRun", "runsPerMonth", "hourlyValueUsd", "runningCostUsdPerMonth", "implementationHours", "measuredMinutesSavedPerMonth"],
+      "properties": {
+        "baselineMinutesPerRun": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "runsPerMonth": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "hourlyValueUsd": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "runningCostUsdPerMonth": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "implementationHours": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "measuredMinutesSavedPerMonth": { "$ref": "common.schema.json#/$defs/knownNumber" }
+      },
+      "additionalProperties": false
+    },
+    "riskLevel": { "enum": ["LOW", "MODERATE", "HIGH", "CRITICAL"] },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  }
+}

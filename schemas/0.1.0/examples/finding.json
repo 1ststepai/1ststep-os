@@ -1,0 +1,15 @@
+{
+  "kind": "Finding",
+  "schemaVersion": "0.1.0",
+  "id": "F-9001",
+  "title": "Fixture finding",
+  "severity": "LOW",
+  "domain": "engineering",
+  "category": "fixture",
+  "createdAt": "2026-09-02T12:00:00Z",
+  "evidence": [ { "state": "OBSERVED", "description": "Fixture evidence." } ],
+  "impact": "None; schema fixture.",
+  "remediation": "None; schema fixture.",
+  "status": "VERIFIED",
+  "verification": { "method": "npm run check", "result": "PASS", "at": "2026-09-02T12:30:00Z", "by": { "actorType": "AGENT", "actorId": "audit-agent" } }
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/module-definition.schema.json",
+  "title": "ModuleDefinition",
+  "description": "A selectable Project OS module: a bundle of capabilities plus the files, agents and gates a generated OS needs for them. Applicability is a small declarative rule language over ProjectProfile fields so selection is deterministic (tooling/CAPABILITY_REGISTRY.md).",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "version", "title", "description", "domain", "phase", "status", "applicability",
+    "capabilities", "dependsOn", "conflictsWith", "requiredFiles", "requiredAgents", "requiredGates",
+    "adapterContributions", "riskFactors", "researchTopics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ModuleDefinition" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/moduleId" },
+    "version": { "$ref": "common.schema.json#/$defs/semver" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "domain": { "$ref": "common.schema.json#/$defs/domain" },
+    "phase": { "$ref": "common.schema.json#/$defs/phase", "description": "Earliest product phase in which the compiler can generate this module. Matched modules with a later phase are reported as deferred, not generated." },
+    "status": { "enum": ["EXPERIMENTAL", "STABLE", "DEPRECATED"] },
+    "applicability": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["mode"],
+          "properties": { "mode": { "const": "ALWAYS" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["mode", "onUnknown"],
+          "properties": {
+            "mode": { "const": "RULES" },
+            "all": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/condition" } },
+            "any": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/condition" } },
+            "onUnknown": { "enum": ["EXCLUDE", "INCLUDE", "RAISE_DECISION"] }
+          },
+          "anyOf": [{ "required": ["all"] }, { "required": ["any"] }],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "capabilities": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/capabilityId" } },
+    "dependsOn": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/moduleId" } },
+    "conflictsWith": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/moduleId" } },
+    "requiredFiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "template"],
+        "properties": {
+          "path": { "$ref": "common.schema.json#/$defs/relativePath" },
+          "template": { "type": "string", "pattern": "^[a-z0-9-]+/[A-Za-z0-9._/-]+$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "requiredAgents": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" } },
+    "requiredGates": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/gateId" } },
+    "adapterContributions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["adapter", "template"],
+        "properties": {
+          "adapter": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+          "template": { "type": "string", "pattern": "^[a-z0-9-]+/[A-Za-z0-9._/-]+$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "riskFactors": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" } },
+    "researchTopics": { "type": "array", "uniqueItems": true, "items": { "$ref": "research-claim.schema.json#/$defs/topic" } }
+  },
+  "$defs": {
+    "condition": {
+      "type": "object",
+      "required": ["field", "operator"],
+      "properties": {
+        "field": {
+          "enum": [
+            "mode", "productTypes", "platformTargets", "lifecycleStage", "dataSensitivity", "businessModel",
+            "distributionModel", "integrations", "capabilityRequests", "auth.needed", "payments.needed", "ai.usesAI", "riskClassification.level"
+          ]
+        },
+        "operator": { "enum": ["INCLUDES_ANY", "EXCLUDES_ALL", "IN", "IS_TRUE", "IS_FALSE"] },
+        "values": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "operator": { "enum": ["INCLUDES_ANY", "EXCLUDES_ALL", "IN"] } } },
+      "then": { "required": ["values"] },
+      "else": { "not": { "required": ["values"] } }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/provider-policy.schema.json",
+  "title": "ProviderPolicy",
+  "description": "Organization/project/user AI provider policy (audit/PROVIDER_POLICY.md, os/ai/*). Policy is applied before capability routing: the router only ranks models the policy allows. Set by humans only.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "organizationId", "scope", "providers", "allowedTiers", "allowedHosting",
+    "localOnly", "residency", "dataRetention", "budgets", "failover", "verification", "updatedBy", "updatedAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ProviderPolicy" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "organizationId": { "$ref": "common.schema.json#/$defs/id" },
+    "scope": {
+      "type": "object",
+      "required": ["level", "ref"],
+      "properties": {
+        "level": { "enum": ["ORGANIZATION", "PROJECT", "USER"] },
+        "ref": { "$ref": "common.schema.json#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "providers": {
+      "type": "object",
+      "required": ["mode", "allowed", "prohibited", "preferred"],
+      "properties": {
+        "mode": { "enum": ["ANY_ELIGIBLE", "ALLOWLIST"] },
+        "allowed": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/providerId" } },
+        "prohibited": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/providerId" } },
+        "preferred": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/providerId" } }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "mode": { "const": "ALLOWLIST" } } },
+      "then": { "properties": { "allowed": { "minItems": 1 } } }
+    },
+    "allowedTiers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["B_LOW_COST", "C_BALANCED", "D_PREMIUM"] } },
+    "allowedHosting": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/hosting" } },
+    "localOnly": { "type": "boolean", "description": "Project data may only be processed by LOCAL or SELF_HOSTED models." },
+    "residency": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "dataRetention": {
+      "type": "object",
+      "required": ["maxRetentionDays", "zeroDataRetentionRequired", "trainingOnDataAllowed"],
+      "properties": {
+        "maxRetentionDays": { "$ref": "common.schema.json#/$defs/knownInteger" },
+        "zeroDataRetentionRequired": { "type": "boolean" },
+        "trainingOnDataAllowed": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "required": ["maxCostPerRunUsd", "maxCostPerTaskUsd", "monthlyCeilingUsd"],
+      "properties": {
+        "maxCostPerRunUsd": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "maxCostPerTaskUsd": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "monthlyCeilingUsd": { "$ref": "common.schema.json#/$defs/knownNumber" }
+      },
+      "additionalProperties": false
+    },
+    "failover": {
+      "type": "object",
+      "required": ["crossProviderAllowed", "tierDowngradeAllowed", "pauseInsteadOfFailover"],
+      "properties": {
+        "crossProviderAllowed": { "type": "boolean" },
+        "tierDowngradeAllowed": { "type": "boolean", "description": "Only to models that passed the task eval." },
+        "pauseInsteadOfFailover": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["independentModelRequired", "independentProviderRequired"],
+      "properties": {
+        "independentModelRequired": { "type": "boolean" },
+        "independentProviderRequired": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "independentProviderRequired": { "const": true } } },
+      "then": { "properties": { "independentModelRequired": { "const": true } } }
+    },
+    "updatedBy": { "$ref": "common.schema.json#/$defs/userActor" },
+    "updatedAt": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "localOnly": { "const": true } } },
+      "then": { "properties": { "allowedHosting": { "items": { "enum": ["LOCAL", "SELF_HOSTED"] } } } }
+    }
+  ],
+  "$defs": {
+    "providerId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "hosting": { "enum": ["HOSTED_API", "ENTERPRISE_GATEWAY", "CLOUD_MODEL_PLATFORM", "SELF_HOSTED", "LOCAL", "CUSTOM_ENDPOINT"] }
+  }
+}

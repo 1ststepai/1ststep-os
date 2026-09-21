@@ -1,0 +1,32 @@
+{
+  "kind": "AutomationDefinition",
+  "schemaVersion": "0.1.0",
+  "id": "auto_example_invoice_reminders",
+  "projectId": "proj_example_business",
+  "name": "Overdue invoice reminder drafts",
+  "owner": { "actorType": "USER", "actorId": "user_example" },
+  "status": "DRAFT",
+  "automationType": "SCHEDULED",
+  "trigger": { "type": "SCHEDULE", "schedule": { "cron": "0 9 * * 1-5", "timezone": "Europe/London" } },
+  "conditions": ["invoice.status == OVERDUE", "invoice.daysOverdue >= 7"],
+  "steps": [
+    { "id": "s1-read", "description": "Read overdue invoices from the accounting system.", "requiredScope": "read", "approval": "NONE", "idempotencyKeyTemplate": "{date}:read", "timeoutSeconds": 60 },
+    { "id": "s2-draft", "description": "Draft a polite reminder email per invoice.", "requiredScope": "draft", "approval": "NONE", "idempotencyKeyTemplate": "{invoiceId}:{date}:draft", "timeoutSeconds": 120 },
+    { "id": "s3-send", "description": "Send reminders after the owner approves the batch.", "requiredScope": "publish", "approval": "REQUIRED", "idempotencyKeyTemplate": "{invoiceId}:{date}:send", "timeoutSeconds": 120 }
+  ],
+  "retry": { "maxAttempts": 3, "backoff": "EXPONENTIAL", "retryOn": ["TIMEOUT", "RATE_LIMIT", "TRANSIENT"] },
+  "failureQueue": { "enabled": true, "retentionDays": 30, "notifyOwner": true },
+  "controls": { "pauseSupported": true, "killSwitch": true, "maxRunsPerDay": 1, "budgetCeilingUsdPerMonth": { "status": "UNKNOWN" }, "dryRunAvailable": true },
+  "observability": { "runLog": true, "metrics": ["invoices_found", "drafts_created", "approved_sends"] },
+  "audit": { "auditTrail": true },
+  "roi": {
+    "baselineMinutesPerRun": { "status": "KNOWN", "value": 30, "evidence": "ASSUMED", "source": "USER_STATED" },
+    "runsPerMonth": { "status": "KNOWN", "value": 20, "evidence": "INFERRED", "source": "RULE_DERIVED" },
+    "hourlyValueUsd": { "status": "UNKNOWN" },
+    "runningCostUsdPerMonth": { "status": "UNKNOWN" },
+    "implementationHours": { "status": "UNKNOWN" },
+    "measuredMinutesSavedPerMonth": { "status": "UNKNOWN" }
+  },
+  "riskLevel": "MODERATE",
+  "createdAt": "2026-09-02T12:00:00Z"
+}

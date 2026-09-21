@@ -1,0 +1,28 @@
+{
+  "kind": "ResearchClaim",
+  "schemaVersion": "0.1.0",
+  "id": "claim_example_pricing_1",
+  "projectId": "proj_example_petsit",
+  "questionId": "rq_pricing_models",
+  "topic": "PRICING",
+  "claimType": "FACT",
+  "claim": "Example Competitor (fixture) lists a per-booking service fee on its pricing page.",
+  "evidence": "OBSERVED",
+  "confidence": "MEDIUM",
+  "sources": [
+    {
+      "url": "https://example.com/pricing",
+      "title": "Pricing (fixture; not real research)",
+      "sourceType": "PRIMARY",
+      "retrievalMethod": "FETCH",
+      "retrievedAt": "2026-09-02T12:00:00Z",
+      "publishedAt": { "status": "UNKNOWN" },
+      "excerpt": "A service fee applies to each booking.",
+      "contentHash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "freshness": { "windowDays": 30, "expiresAt": "2026-10-02T12:00:00Z" },
+  "recommendationIds": ["rec_example_pricing"],
+  "createdBy": { "actorType": "AGENT", "actorId": "pricing-agent" },
+  "createdAt": "2026-09-02T12:05:00Z"
+}

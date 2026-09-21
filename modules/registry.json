@@ -1,0 +1,540 @@
+{
+  "kind": "ModuleRegistry",
+  "schemaVersion": "0.1.0",
+  "registryVersion": "0.1.0",
+  "modules": [
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "core", "version": "0.1.0",
+      "title": "Project OS core",
+      "description": "Authority, profile, state, evidence vocabulary, decisions, handoffs, baseline security/testing and coding-agent adapters. Included in every generated OS.",
+      "domain": "orchestrator", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "ALWAYS" },
+      "capabilities": [
+        "product.idea_validation", "product.product_strategy", "product.prd_generator", "product.user_stories", "product.jtbd",
+        "product.roadmap", "product.feature_prioritization", "product.requirements_traceability",
+        "security.threat_model", "security.data_classification", "security.secret_scanning", "security.prompt_injection",
+        "quality.unit_testing", "quality.release_gates", "docs.readme", "docs.architecture_docs", "docs.changelog",
+        "team.task_planning", "team.handoffs", "team.code_review", "team.sprints", "team.meeting_summaries",
+        "ai.claude_code", "ai.codex", "ai.cursor_adapter", "business.cost_model"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "AGENTS.md", "template": "core/AGENTS.md" },
+        { "path": "PROJECT.md", "template": "core/PROJECT.md" },
+        { "path": "PRODUCT_REQUIREMENTS.md", "template": "core/PRODUCT_REQUIREMENTS.md" },
+        { "path": "ARCHITECTURE.md", "template": "core/ARCHITECTURE.md" },
+        { "path": "SECURITY.md", "template": "core/SECURITY.md" },
+        { "path": "EXTERNAL_ACTIONS.md", "template": "core/EXTERNAL_ACTIONS.md" },
+        { "path": "RESEARCH_POLICY.md", "template": "core/RESEARCH_POLICY.md" },
+        { "path": "DECISIONS.md", "template": "core/DECISIONS.md" },
+        { "path": "state/CURRENT_STATE.md", "template": "core/state/CURRENT_STATE.md" },
+        { "path": "state/NEXT_ACTIONS.md", "template": "core/state/NEXT_ACTIONS.md" },
+        { "path": "state/IMPLEMENTATION_INVENTORY.md", "template": "core/state/IMPLEMENTATION_INVENTORY.md" },
+        { "path": ".project-os/manifest.json", "template": "core/manifest.json" },
+        { "path": ".project-os/profile.json", "template": "core/profile.json" },
+        { "path": ".project-os/permissions.json", "template": "core/permissions.json" }
+      ],
+      "requiredAgents": ["orchestrator", "product-agent", "architect-agent", "qa-agent", "security-agent", "audit-agent"],
+      "requiredGates": ["G0", "G1", "G2", "G3", "G4"],
+      "adapterContributions": [
+        { "adapter": "claude", "template": "adapters/claude/CLAUDE.md" },
+        { "adapter": "claude", "template": "adapters/claude/CLAUDE_BOOTSTRAP.md" },
+        { "adapter": "codex", "template": "adapters/codex/CODEX_BOOTSTRAP.md" },
+        { "adapter": "cursor", "template": "adapters/cursor/project-os.mdc" },
+        { "adapter": "generic", "template": "adapters/generic/BOOTSTRAP.md" }
+      ],
+      "riskFactors": [], "researchTopics": []
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "web-saas", "version": "0.1.0",
+      "title": "Web application / SaaS",
+      "description": "Web app engineering: data, auth, tenancy, jobs, deployment, observability and web security.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "RAISE_DECISION",
+        "any": [
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["WEB_SAAS", "MARKETPLACE", "INTERNAL_TOOL", "ECOMMERCE", "REALTIME_APP", "CONTENT_SITE"] },
+          { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["WEB"] }
+        ]
+      },
+      "capabilities": [
+        "development.web_apps", "development.pwa", "development.realtime_apps", "development.internal_tools", "development.marketplaces",
+        "backend.database", "backend.auth", "backend.authorization", "backend.multitenancy", "backend.storage", "backend.email",
+        "backend.rate_limiting", "backend.background_jobs", "backend.migrations", "backend.webhooks", "backend.queues", "backend.cron",
+        "backend.cache", "backend.search", "backend.notifications",
+        "infra.ci_cd", "infra.environments", "infra.deployment", "infra.secrets", "infra.logging", "infra.observability", "infra.backups",
+        "infra.alerting", "infra.metrics", "infra.tracing", "infra.feature_flags", "infra.cdn", "infra.dns_domains", "infra.disaster_recovery", "infra.cost_monitoring",
+        "security.owasp", "security.tenant_isolation", "security.dependency_security", "security.audit_log", "security.retention", "security.deletion",
+        "security.incident_response", "security.vulnerability_management",
+        "quality.integration_testing", "quality.e2e_testing", "quality.security_testing", "quality.load_testing", "quality.rollback"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/WEB_APP.md", "template": "web-saas/WEB_APP.md" },
+        { "path": "engineering/AUTH_AND_TENANCY.md", "template": "web-saas/AUTH_AND_TENANCY.md" },
+        { "path": "engineering/DEPLOYMENT.md", "template": "web-saas/DEPLOYMENT.md" }
+      ],
+      "requiredAgents": ["frontend-agent", "backend-agent", "database-agent", "auth-agent", "devops-agent"],
+      "requiredGates": ["G3", "G5", "G6"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": ["TECHNICAL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "premium-ux", "version": "0.1.0",
+      "title": "Premium experience",
+      "description": "Design system, tokens, motion, accessibility, responsive behaviour, state design, performance budgets and design review for any user-facing surface.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "INCLUDE",
+        "any": [ { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["WEB", "IOS", "ANDROID", "MACOS", "WINDOWS", "LINUX", "BROWSER_EXTENSION"] } ]
+      },
+      "capabilities": [
+        "design.design_system", "design.design_tokens", "design.responsive_design", "design.motion", "design.microinteractions",
+        "design.accessibility", "design.iconography", "design.illustration", "design.data_visualization", "design.design_qa", "design.wireframes",
+        "design.prototyping", "design.ux_research", "design.usability_testing",
+        "quality.accessibility_testing", "quality.visual_regression", "quality.cross_browser", "quality.device_testing"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "design/EXPERIENCE_SYSTEM.md", "template": "premium-ux/EXPERIENCE_SYSTEM.md" },
+        { "path": "design/tokens.json", "template": "premium-ux/tokens.json" },
+        { "path": "gates/DESIGN_REVIEW.md", "template": "premium-ux/DESIGN_REVIEW.md" }
+      ],
+      "requiredAgents": ["frontend-agent", "qa-agent"],
+      "requiredGates": ["G4", "DESIGN_REVIEW"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": []
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "ai", "version": "0.1.0",
+      "title": "AI features and runtime",
+      "description": "Provider-neutral model use, routing, token budgets, evals, guardrails, prompt-injection defence and AI cost review.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "RAISE_DECISION", "all": [ { "field": "ai.usesAI", "operator": "IS_TRUE" } ] },
+      "capabilities": [
+        "ai.model_routing", "ai.agents", "ai.tool_use", "ai.rag", "ai.embeddings", "ai.vector_search", "ai.evals", "ai.guardrails",
+        "ai.prompt_registry", "ai.context_engineering", "ai.token_harness", "ai.caching", "ai.fallbacks", "ai.structured_output",
+        "ai.human_approval", "ai.mcp_connectors"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/AI_RUNTIME.md", "template": "ai/AI_RUNTIME.md" },
+        { "path": "engineering/AI_COST_BUDGETS.md", "template": "ai/AI_COST_BUDGETS.md" },
+        { "path": "engineering/AI_EVALS.md", "template": "ai/AI_EVALS.md" }
+      ],
+      "requiredAgents": ["ai-agent", "security-agent"],
+      "requiredGates": ["G3", "G4", "COST_REVIEW"],
+      "adapterContributions": [], "riskFactors": ["AI_PROMPT_INJECTION", "AI_DATA_EXPOSURE", "AI_COST_OVERRUN"], "researchTopics": ["TECHNICAL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "payments", "version": "0.1.0",
+      "title": "Payments and billing",
+      "description": "Payment integration boundaries, webhooks, billing operations, pricing evidence and unit economics.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "RAISE_DECISION", "all": [ { "field": "payments.needed", "operator": "IS_TRUE" } ] },
+      "capabilities": ["marketing.pricing", "marketing.monetization", "backend.webhooks", "security.audit_log", "analytics.unit_economics"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/PAYMENTS.md", "template": "payments/PAYMENTS.md" },
+        { "path": "operations/BILLING_OPERATIONS.md", "template": "payments/BILLING_OPERATIONS.md" }
+      ],
+      "requiredAgents": ["backend-agent", "security-agent", "operations-agent", "pricing-agent"],
+      "requiredGates": ["G3", "G5"],
+      "adapterContributions": [], "riskFactors": ["PAYMENT_PROCESSING"], "researchTopics": ["PRICING"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "mobile", "version": "0.1.0",
+      "title": "Mobile apps",
+      "description": "iOS/Android or cross-platform app engineering, device testing, push notifications and store listing requirements.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "RAISE_DECISION",
+        "any": [
+          { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["IOS", "ANDROID"] },
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["MOBILE_APP"] }
+        ]
+      },
+      "capabilities": ["development.mobile_apps", "development.offline_first", "brand.app_store_assets", "quality.device_testing", "backend.notifications"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/MOBILE.md", "template": "mobile/MOBILE.md" },
+        { "path": "growth/APP_STORE_LISTING.md", "template": "mobile/APP_STORE_LISTING.md" }
+      ],
+      "requiredAgents": ["frontend-agent", "qa-agent", "devops-agent"],
+      "requiredGates": ["G4", "G5"],
+      "adapterContributions": [], "riskFactors": ["APP_STORE_REVIEW"], "researchTopics": ["CHANNEL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "desktop", "version": "0.1.0",
+      "title": "Desktop apps",
+      "description": "macOS/Windows/Linux packaging, code signing, auto-update and device testing.",
+      "domain": "engineering", "phase": "P1", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["MACOS", "WINDOWS", "LINUX"] },
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["DESKTOP_APP"] }
+        ]
+      },
+      "capabilities": ["development.desktop_apps", "development.offline_first", "quality.device_testing"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [ { "path": "engineering/DESKTOP.md", "template": "desktop/DESKTOP.md" } ],
+      "requiredAgents": ["frontend-agent", "devops-agent", "qa-agent"],
+      "requiredGates": ["G4", "G5"],
+      "adapterContributions": [], "riskFactors": ["CODE_SIGNING"], "researchTopics": []
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "browser-extension", "version": "0.1.0",
+      "title": "Browser extension",
+      "description": "Extension permissions minimisation, content-script isolation, cross-browser testing and store policies.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "RAISE_DECISION",
+        "any": [
+          { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["BROWSER_EXTENSION"] },
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["BROWSER_EXTENSION"] }
+        ]
+      },
+      "capabilities": ["development.browser_extensions", "security.data_classification", "quality.cross_browser"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/BROWSER_EXTENSION.md", "template": "browser-extension/BROWSER_EXTENSION.md" },
+        { "path": "growth/EXTENSION_STORE_LISTING.md", "template": "browser-extension/EXTENSION_STORE_LISTING.md" }
+      ],
+      "requiredAgents": ["frontend-agent", "security-agent", "qa-agent"],
+      "requiredGates": ["G3", "G5"],
+      "adapterContributions": [], "riskFactors": ["EXTENSION_PERMISSIONS"], "researchTopics": ["CHANNEL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "ecommerce", "version": "0.1.0",
+      "title": "Ecommerce",
+      "description": "Catalog, orders, fulfilment, returns, reviews and consumer-protection readiness.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "RAISE_DECISION", "any": [ { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["ECOMMERCE"] } ] },
+      "capabilities": ["development.ecommerce", "business.vendor_selection", "customer.reviews", "customer.support", "marketing.paid_ads", "analytics.cro"],
+      "dependsOn": ["payments"], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/CATALOG_AND_ORDERS.md", "template": "ecommerce/CATALOG_AND_ORDERS.md" },
+        { "path": "operations/FULFILLMENT_AND_RETURNS.md", "template": "ecommerce/FULFILLMENT_AND_RETURNS.md" }
+      ],
+      "requiredAgents": ["backend-agent", "operations-agent", "pricing-agent"],
+      "requiredGates": ["G3", "G5"],
+      "adapterContributions": [], "riskFactors": ["CONSUMER_PROTECTION"], "researchTopics": ["COMPETITOR", "PRICING"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "developer-tool", "version": "0.1.0",
+      "title": "Developer tool / API / SDK",
+      "description": "API design and versioning, CLI/SDK distribution, docs, supply-chain security and developer community.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "RAISE_DECISION",
+        "any": [
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["DEVELOPER_TOOL", "API_SERVICE", "SDK_LIBRARY"] },
+          { "field": "platformTargets", "operator": "INCLUDES_ANY", "values": ["CLI", "API"] }
+        ]
+      },
+      "capabilities": ["development.apis", "development.cli_tools", "development.sdk_libraries", "docs.api_docs", "docs.tutorials", "docs.release_notes", "security.dependency_security", "marketing.community"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/DEVELOPER_EXPERIENCE.md", "template": "developer-tool/DEVELOPER_EXPERIENCE.md" },
+        { "path": "engineering/API_VERSIONING.md", "template": "developer-tool/API_VERSIONING.md" },
+        { "path": "growth/DEVELOPER_RELATIONS.md", "template": "developer-tool/DEVELOPER_RELATIONS.md" }
+      ],
+      "requiredAgents": ["backend-agent", "content-agent", "community-agent"],
+      "requiredGates": ["G4", "G5"],
+      "adapterContributions": [], "riskFactors": ["SUPPLY_CHAIN"], "researchTopics": ["COMPETITOR", "CHANNEL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "trading-financial", "version": "0.1.0",
+      "title": "Trading / financial",
+      "description": "Financial-regulation readiness, audit trails and safety defaults: paper/simulation first, no live order execution without T3 high-risk approval.",
+      "domain": "engineering", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "RAISE_DECISION",
+        "any": [
+          { "field": "productTypes", "operator": "INCLUDES_ANY", "values": ["FINANCIAL_TRADING"] },
+          { "field": "dataSensitivity", "operator": "INCLUDES_ANY", "values": ["FINANCIAL"] }
+        ]
+      },
+      "capabilities": ["security.audit_log", "security.threat_model", "business.terms_privacy_readiness", "business.insurance_risk_checklist", "quality.security_testing"],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/FINANCIAL_SAFETY.md", "template": "trading-financial/FINANCIAL_SAFETY.md" },
+        { "path": "operations/REGULATORY_READINESS.md", "template": "trading-financial/REGULATORY_READINESS.md" }
+      ],
+      "requiredAgents": ["security-agent", "backend-agent", "audit-agent", "operations-agent"],
+      "requiredGates": ["G3", "G5", "G6"],
+      "adapterContributions": [], "riskFactors": ["FINANCIAL_REGULATION", "AUTONOMOUS_EXECUTION_RISK"], "researchTopics": ["REGULATORY"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "business-intelligence", "version": "0.1.0",
+      "title": "Business intelligence",
+      "description": "Evidence-backed market, customer, competitor, pricing, positioning and brand foundations.",
+      "domain": "business-intelligence", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "INCLUDE", "all": [ { "field": "productTypes", "operator": "EXCLUDES_ALL", "values": ["INTERNAL_TOOL"] } ] },
+      "capabilities": [
+        "marketing.market_research", "marketing.competitors", "marketing.icp", "marketing.personas", "marketing.pricing", "marketing.monetization",
+        "brand.positioning", "brand.naming", "brand.messaging", "brand.taglines", "brand.domain_strategy",
+        "business.business_model", "business.financial_model", "business.cac_ltv", "business.break_even", "business.forecasting",
+        "business.budgeting", "business.ip_trademark_checklist", "business.terms_privacy_readiness"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "business/MARKET_RESEARCH.md", "template": "business-intelligence/MARKET_RESEARCH.md" },
+        { "path": "business/COMPETITOR_INTELLIGENCE.md", "template": "business-intelligence/COMPETITOR_INTELLIGENCE.md" },
+        { "path": "business/PRICING_AND_MONETIZATION.md", "template": "business-intelligence/PRICING_AND_MONETIZATION.md" },
+        { "path": "business/POSITIONING_AND_BRAND.md", "template": "business-intelligence/POSITIONING_AND_BRAND.md" }
+      ],
+      "requiredAgents": ["business-orchestrator-agent", "market-research-agent", "competitor-agent", "pricing-agent", "brand-agent"],
+      "requiredGates": ["G0"],
+      "adapterContributions": [], "riskFactors": [],
+      "researchTopics": ["MARKET", "CUSTOMER", "COMPETITOR", "SUBSTITUTE", "PRICING", "POSITIONING", "BRAND"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "growth", "version": "0.1.0",
+      "title": "Growth",
+      "description": "Full-funnel distribution from day one: channels, SEO/content, socials, launch, directories, analytics and experiments. All publishing is approval-gated.",
+      "domain": "growth", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "INCLUDE", "all": [ { "field": "productTypes", "operator": "EXCLUDES_ALL", "values": ["INTERNAL_TOOL"] } ] },
+      "capabilities": [
+        "marketing.seo", "marketing.content", "marketing.socials", "marketing.community", "marketing.directories", "marketing.product_launch",
+        "marketing.email_marketing", "marketing.newsletter", "marketing.pr", "marketing.partnerships", "marketing.affiliates", "marketing.referrals",
+        "marketing.utm_attribution", "marketing.influencers", "marketing.paid_ads", "marketing.retargeting",
+        "brand.brand_guidelines", "brand.color_typography", "brand.logo", "brand.social_kit", "brand.press_kit", "brand.screenshots", "brand.mockups", "brand.pitch_deck",
+        "analytics.event_taxonomy", "analytics.product_analytics", "analytics.web_analytics", "analytics.funnel", "analytics.cohorts", "analytics.retention",
+        "analytics.attribution", "analytics.dashboards", "analytics.experiments", "analytics.ab_tests", "analytics.cro",
+        "image.og_images", "image.social_graphics", "image.thumbnails"
+      ],
+      "dependsOn": ["business-intelligence"], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "growth/DISTRIBUTION.md", "template": "growth/DISTRIBUTION.md" },
+        { "path": "growth/SOCIALS.md", "template": "growth/SOCIALS.md" },
+        { "path": "growth/SEO_CONTENT.md", "template": "growth/SEO_CONTENT.md" },
+        { "path": "growth/CONVERSION.md", "template": "growth/CONVERSION.md" },
+        { "path": "growth/FULL_FUNNEL.md", "template": "growth/FULL_FUNNEL.md" }
+      ],
+      "requiredAgents": ["growth-agent", "social-agent", "seo-agent", "content-agent", "directory-agent", "community-agent", "analytics-agent"],
+      "requiredGates": ["G5", "G7"],
+      "adapterContributions": [], "riskFactors": ["PLATFORM_POLICY"], "researchTopics": ["CHANNEL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "operations", "version": "0.1.0",
+      "title": "Operations",
+      "description": "Runbooks, incidents, support, backups, data export/deletion requests and ownership.",
+      "domain": "operations", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "INCLUDE",
+        "any": [
+          { "field": "auth.needed", "operator": "IS_TRUE" },
+          { "field": "payments.needed", "operator": "IS_TRUE" },
+          { "field": "lifecycleStage", "operator": "IN", "values": ["LAUNCHED", "GROWING", "EXISTING_RECOVERY"] },
+          { "field": "mode", "operator": "IN", "values": ["AUTOMATE_BUSINESS"] }
+        ]
+      },
+      "capabilities": [
+        "docs.runbooks", "docs.training", "security.incident_response", "security.deletion", "security.retention", "infra.backups",
+        "docs.internal_knowledge", "team.raci", "team.contractor_briefs", "team.hiring_plan", "team.job_descriptions", "team.interview_kits"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "operations/RUNBOOKS.md", "template": "operations/RUNBOOKS.md" },
+        { "path": "operations/INCIDENT_RESPONSE.md", "template": "operations/INCIDENT_RESPONSE.md" },
+        { "path": "operations/SUPPORT.md", "template": "operations/SUPPORT.md" },
+        { "path": "operations/DATA_REQUESTS.md", "template": "operations/DATA_REQUESTS.md" }
+      ],
+      "requiredAgents": ["operations-agent", "devops-agent"],
+      "requiredGates": ["G5", "G6", "G7"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": []
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "automation", "version": "0.1.0",
+      "title": "Automation",
+      "description": "Automation catalog and AutomationDefinition specs with triggers, idempotency, retries, failure queues, owners, kill switches and ROI. Guidance in P0; execution is LATER.",
+      "domain": "operations", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "mode", "operator": "IN", "values": ["AUTOMATE_BUSINESS"] },
+          { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["automation.workflow_automation", "automation.email_automation", "automation.crm_automation", "automation.reporting_automation", "automation.data_sync"] }
+        ]
+      },
+      "capabilities": [
+        "automation.workflow_automation", "automation.integration_discovery", "automation.triggers", "automation.scheduled_jobs",
+        "automation.webhook_automation", "automation.email_automation", "automation.crm_automation", "automation.lead_routing",
+        "automation.reporting_automation", "automation.data_sync", "automation.document_automation", "automation.approval_workflows", "automation.rpa_boundaries"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "automation/AUTOMATION_CATALOG.md", "template": "automation/AUTOMATION_CATALOG.md" },
+        { "path": "automation/HUMAN_CONTROL.md", "template": "automation/HUMAN_CONTROL.md" }
+      ],
+      "requiredAgents": ["operations-agent", "backend-agent", "security-agent"],
+      "requiredGates": ["G3", "G5"],
+      "adapterContributions": [], "riskFactors": ["EXTERNAL_SIDE_EFFECTS"], "researchTopics": ["TECHNICAL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "business-owner", "version": "0.1.0",
+      "title": "Business Owner Mode",
+      "description": "Business operations inventory and a deterministic, ranked automation opportunity map (time saved, cost, effort, risk, ROI) for non-developers.",
+      "domain": "operations", "phase": "P0", "status": "EXPERIMENTAL",
+      "applicability": { "mode": "RULES", "onUnknown": "RAISE_DECISION", "all": [ { "field": "mode", "operator": "IN", "values": ["AUTOMATE_BUSINESS"] } ] },
+      "capabilities": [
+        "automation.integration_discovery", "business.cost_model", "business.vendor_selection", "business.budgeting",
+        "business.procurement", "business.tax_accounting_handoff", "sales.crm", "sales.quotes"
+      ],
+      "dependsOn": ["automation", "operations"], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "operations/BUSINESS_PROFILE.md", "template": "business-owner/BUSINESS_PROFILE.md" },
+        { "path": "operations/AUTOMATION_OPPORTUNITY_MAP.md", "template": "business-owner/AUTOMATION_OPPORTUNITY_MAP.md" }
+      ],
+      "requiredAgents": ["business-orchestrator-agent", "operations-agent"],
+      "requiredGates": ["G0"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": ["TECHNICAL", "PRICING"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "sales-crm", "version": "0.1.0",
+      "title": "Sales and CRM",
+      "description": "ICP-driven lead qualification, pipeline, outreach drafts (approval-gated sending), proposals and win/loss.",
+      "domain": "growth", "phase": "P1", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "distributionModel", "operator": "INCLUDES_ANY", "values": ["SALES_LED", "PARTNER"] },
+          { "field": "businessModel", "operator": "INCLUDES_ANY", "values": ["ENTERPRISE", "SERVICES"] },
+          { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["sales.crm", "sales.outreach", "sales.pipeline"] }
+        ]
+      },
+      "capabilities": [
+        "sales.lead_research", "sales.lead_qualification", "sales.crm", "sales.pipeline", "sales.outreach", "sales.sales_emails",
+        "sales.demo", "sales.proposals", "sales.quotes", "sales.followups", "sales.sales_enablement", "sales.win_loss"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [ { "path": "growth/SALES_PLAYBOOK.md", "template": "sales-crm/SALES_PLAYBOOK.md" } ],
+      "requiredAgents": ["growth-agent", "content-agent"],
+      "requiredGates": ["G5"],
+      "adapterContributions": [], "riskFactors": ["OUTREACH_COMPLIANCE"], "researchTopics": ["CUSTOMER"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "customer-success", "version": "0.1.0",
+      "title": "Customer success",
+      "description": "Onboarding, activation, support, knowledge base, feedback, churn and advocacy.",
+      "domain": "operations", "phase": "P1", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "lifecycleStage", "operator": "IN", "values": ["LAUNCHED", "GROWING"] },
+          { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["customer.support", "customer.onboarding"] }
+        ]
+      },
+      "capabilities": [
+        "customer.onboarding", "customer.activation", "customer.support", "customer.knowledge_base", "customer.chatbot", "customer.ticketing",
+        "customer.nps_csat", "customer.reviews", "customer.testimonials", "customer.case_studies", "customer.churn", "customer.winback", "customer.feature_requests",
+        "docs.user_guides", "product.feedback_synthesis"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [ { "path": "operations/CUSTOMER_SUCCESS.md", "template": "customer-success/CUSTOMER_SUCCESS.md" } ],
+      "requiredAgents": ["operations-agent", "content-agent", "analytics-agent"],
+      "requiredGates": ["G7"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": ["CUSTOMER"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "media-factory", "version": "0.1.0",
+      "title": "Media Factory",
+      "description": "Brand-source-driven images, video, voice, audio and 3D with provenance, rights, consent and cost routing. Deterministic processing first.",
+      "domain": "growth", "phase": "P2", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["image.text_to_image", "image.social_graphics", "video.video_strategy", "video.demo_video", "video.short_form", "audio.voiceover", "audio.podcast", "spatial.product_3d"] }
+        ]
+      },
+      "capabilities": [
+        "image.text_to_image", "image.image_editing", "image.background_removal", "image.upscale", "image.product_mockups", "image.ad_creative",
+        "image.thumbnails", "image.social_graphics", "image.og_images", "image.diagrams", "image.infographics",
+        "video.video_strategy", "video.scripting", "video.storyboard", "video.text_to_video", "video.image_to_video", "video.video_editing",
+        "video.broll", "video.clipping", "video.reframing", "video.captions", "video.subtitles", "video.transitions", "video.color_audio_finish",
+        "video.lipsync", "video.avatars", "video.dubbing", "video.short_form", "video.demo_video", "video.tutorial_video", "video.ad_video",
+        "audio.voiceover", "audio.voice_cloning", "audio.voice_consent", "audio.text_to_speech", "audio.speech_to_text", "audio.transcription",
+        "audio.podcast", "audio.audio_editing", "audio.noise_removal", "audio.music", "audio.sound_effects", "audio.audio_localization",
+        "spatial.image_to_3d", "spatial.text_to_3d", "spatial.product_3d", "spatial.ar_assets", "spatial.model_optimization"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "media/MEDIA_PLAN.md", "template": "media-factory/MEDIA_PLAN.md" },
+        { "path": "media/ASSET_PROVENANCE.md", "template": "media-factory/ASSET_PROVENANCE.md" },
+        { "path": "media/CONSENT_REGISTER.md", "template": "media-factory/CONSENT_REGISTER.md" }
+      ],
+      "requiredAgents": ["content-agent", "brand-agent", "social-agent"],
+      "requiredGates": ["G3", "COST_REVIEW"],
+      "adapterContributions": [], "riskFactors": ["IDENTITY_CONSENT", "CONTENT_LICENSING", "AI_COST_OVERRUN"], "researchTopics": ["BRAND"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "localization", "version": "0.1.0",
+      "title": "Localization",
+      "description": "i18n architecture, locale formatting, translation workflow, RTL, multilingual SEO and dubbing.",
+      "domain": "engineering", "phase": "P2", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [ { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["international.i18n", "international.localization", "international.translation"] } ]
+      },
+      "capabilities": [
+        "international.i18n", "international.localization", "international.translation", "international.rtl",
+        "international.locale_formatting", "international.multilingual_seo", "international.dubbing_localization"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "engineering/I18N.md", "template": "localization/I18N.md" },
+        { "path": "growth/LOCALIZATION_PLAN.md", "template": "localization/LOCALIZATION_PLAN.md" }
+      ],
+      "requiredAgents": ["frontend-agent", "content-agent", "seo-agent"],
+      "requiredGates": ["G4"],
+      "adapterContributions": [], "riskFactors": [], "researchTopics": ["MARKET"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "recovery", "version": "0.1.0",
+      "title": "Existing project recovery",
+      "description": "Read-only repository discovery, stack detection, architecture inference, inventory, tech debt and migration planning for existing codebases.",
+      "domain": "engineering", "phase": "P1", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "mode", "operator": "IN", "values": ["RECOVER_PROJECT"] },
+          { "field": "lifecycleStage", "operator": "IN", "values": ["EXISTING_RECOVERY"] }
+        ]
+      },
+      "capabilities": [
+        "recovery.repo_discovery", "recovery.stack_detection", "recovery.dependency_inventory", "recovery.architecture_inference",
+        "recovery.tech_debt", "recovery.migration_plan", "recovery.legacy_user_continuity", "recovery.billing_migration",
+        "recovery.data_migration", "recovery.os_recovery"
+      ],
+      "dependsOn": [], "conflictsWith": [],
+      "requiredFiles": [
+        { "path": "recovery/RECOVERY_PLAN.md", "template": "recovery/RECOVERY_PLAN.md" },
+        { "path": "recovery/OBSERVED_INVENTORY.md", "template": "recovery/OBSERVED_INVENTORY.md" }
+      ],
+      "requiredAgents": ["architect-agent", "audit-agent", "security-agent", "database-agent"],
+      "requiredGates": ["G1", "G3"],
+      "adapterContributions": [], "riskFactors": ["UNTRUSTED_REPOSITORY"], "researchTopics": ["TECHNICAL"]
+    },
+    {
+      "kind": "ModuleDefinition", "schemaVersion": "0.1.0", "id": "continuous-intelligence", "version": "0.1.0",
+      "title": "Continuous intelligence",
+      "description": "Scheduled, budgeted watches for competitors, pricing, SEO, reputation, dependencies, cost drift and OS drift that raise findings instead of silently changing decisions.",
+      "domain": "business-intelligence", "phase": "P2", "status": "EXPERIMENTAL",
+      "applicability": {
+        "mode": "RULES", "onUnknown": "EXCLUDE",
+        "any": [
+          { "field": "lifecycleStage", "operator": "IN", "values": ["LAUNCHED", "GROWING"] },
+          { "field": "capabilityRequests", "operator": "INCLUDES_ANY", "values": ["intelligence.competitor_watch", "intelligence.pricing_watch", "intelligence.os_drift"] }
+        ]
+      },
+      "capabilities": [
+        "intelligence.competitor_watch", "intelligence.pricing_watch", "intelligence.seo_watch", "intelligence.channel_discovery",
+        "intelligence.reputation_watch", "intelligence.dependency_watch", "intelligence.cost_drift", "intelligence.os_drift", "intelligence.release_watch"
+      ],
+      "dependsOn": ["business-intelligence"], "conflictsWith": [],
+      "requiredFiles": [ { "path": "intelligence/WATCHLIST.md", "template": "continuous-intelligence/WATCHLIST.md" } ],
+      "requiredAgents": ["competitor-agent", "pricing-agent", "seo-agent", "audit-agent"],
+      "requiredGates": ["G7", "COST_REVIEW"],
+      "adapterContributions": [], "riskFactors": ["AI_COST_OVERRUN"], "researchTopics": ["COMPETITOR", "PRICING", "CHANNEL"]
+    }
+  ]
+}

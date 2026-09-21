@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/gate-result.schema.json",
+  "title": "GateResult",
+  "description": "Evaluated gate outcome. PASS requires every criterion to PASS (or be NOT_APPLICABLE with a reason) with evidence. FAIL = evaluated and not met. BLOCKED = cannot be evaluated.",
+  "type": "object",
+  "required": ["kind", "schemaVersion", "id", "gate", "subject", "result", "evaluatedAt", "evaluator", "criteria", "blockers", "nonBlockingOpenItems", "ratification"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "GateResult" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "gate": { "$ref": "common.schema.json#/$defs/gateId" },
+    "subject": {
+      "type": "object",
+      "required": ["type", "ref"],
+      "properties": {
+        "type": { "enum": ["PROJECT", "CYCLE", "MILESTONE", "FEATURE", "RELEASE"] },
+        "ref": { "type": "string", "minLength": 1, "maxLength": 300 }
+      },
+      "additionalProperties": false
+    },
+    "result": { "enum": ["PASS", "FAIL", "BLOCKED", "NOT_APPLICABLE"] },
+    "evaluatedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "evaluator": { "$ref": "common.schema.json#/$defs/actor" },
+    "criteria": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/criterion" } },
+    "blockers": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+    "nonBlockingOpenItems": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+    "notApplicableReason": { "type": "string", "maxLength": 2000 },
+    "ratification": {
+      "description": "Product-owner ratification of an agent-evaluated gate.",
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["NOT_REQUIRED", "PENDING", "RATIFIED", "REJECTED"] },
+        "by": { "$ref": "common.schema.json#/$defs/userActor" },
+        "at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "state": { "enum": ["RATIFIED", "REJECTED"] } } },
+      "then": { "required": ["by", "at"] }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "result": { "const": "PASS" } } },
+      "then": { "properties": { "criteria": { "items": { "properties": { "result": { "enum": ["PASS", "NOT_APPLICABLE"] } } } }, "blockers": { "maxItems": 0 } } }
+    },
+    { "if": { "properties": { "result": { "const": "NOT_APPLICABLE" } } }, "then": { "required": ["notApplicableReason"] } },
+    { "if": { "properties": { "result": { "enum": ["BLOCKED", "FAIL"] } } }, "then": { "properties": { "blockers": { "minItems": 1 } } } }
+  ],
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "required": ["id", "description", "result", "evidence"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "result": { "enum": ["PASS", "FAIL", "BLOCKED", "NOT_APPLICABLE"] },
+        "evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidenceItem" } },
+        "reason": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "result": { "const": "PASS" } } }, "then": { "properties": { "evidence": { "minItems": 1 } } } },
+        { "if": { "properties": { "result": { "const": "NOT_APPLICABLE" } } }, "then": { "required": ["reason"] } }
+      ]
+    }
+  }
+}

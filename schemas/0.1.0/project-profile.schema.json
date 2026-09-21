@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://1ststep.ai/os/schemas/0.1.0/project-profile.schema.json",
+  "title": "ProjectProfile",
+  "description": "Canonical, versioned description of a project or business. Uncertain fields are assessments; unknown is never encoded as false, null or an empty list.",
+  "type": "object",
+  "required": [
+    "kind", "schemaVersion", "id", "profileVersion", "createdAt", "updatedAt", "mode",
+    "identity", "idea", "targetUsers", "jobsToBeDone", "productTypes", "lifecycleStage",
+    "featureScope", "nonGoals", "dataSensitivity", "auth", "payments", "ai", "integrations",
+    "platformTargets", "geography", "businessModel", "distributionModel", "growthGoals",
+    "capabilityRequests", "businessOperations", "budget",
+    "riskClassification", "stackRecommendation", "selectedModules", "assumptions", "unresolvedDecisions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "ProjectProfile" },
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "profileVersion": { "type": "integer", "minimum": 1, "description": "Incremented on every change; versions are append-only." },
+    "createdAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "updatedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "mode": {
+      "description": "BUILD_PRODUCT (idea → product), AUTOMATE_BUSINESS (Business Owner Mode), RECOVER_PROJECT (existing codebase, P1).",
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "enum": ["BUILD_PRODUCT", "AUTOMATE_BUSINESS", "RECOVER_PROJECT"] } },
+      "unevaluatedProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "$ref": "common.schema.json#/$defs/knownString" } },
+      "additionalProperties": false
+    },
+    "idea": {
+      "type": "object",
+      "required": ["originalText", "summary", "problem"],
+      "properties": {
+        "originalText": { "$ref": "common.schema.json#/$defs/untrustedText" },
+        "summary": { "$ref": "common.schema.json#/$defs/knownString" },
+        "problem": { "$ref": "common.schema.json#/$defs/knownString" }
+      },
+      "additionalProperties": false
+    },
+    "targetUsers": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "jobsToBeDone": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "productTypes": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/productType" } } },
+      "unevaluatedProperties": false
+    },
+    "lifecycleStage": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "$ref": "#/$defs/lifecycleStage" } },
+      "unevaluatedProperties": false
+    },
+    "featureScope": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "priority"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/id" },
+              "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "priority": { "enum": ["P0", "P1", "P2"] }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "nonGoals": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "dataSensitivity": {
+      "description": "KNOWN with [] means confirmed: no sensitive data classes.",
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/dataClass" } } },
+      "unevaluatedProperties": false
+    },
+    "auth": {
+      "type": "object",
+      "required": ["needed", "methods", "multiTenant"],
+      "properties": {
+        "needed": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "methods": {
+          "$ref": "common.schema.json#/$defs/assessment",
+          "properties": {
+            "value": { "type": "array", "uniqueItems": true, "items": { "enum": ["EMAIL_PASSWORD", "MAGIC_LINK", "OAUTH_SOCIAL", "SSO_OIDC_SAML", "PASSKEY", "API_KEY"] } }
+          },
+          "unevaluatedProperties": false
+        },
+        "multiTenant": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "payments": {
+      "type": "object",
+      "required": ["needed", "handlesCardData"],
+      "properties": {
+        "needed": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "handlesCardData": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "ai": {
+      "type": "object",
+      "required": ["usesAI", "userDataSentToModels", "autonomousExternalActions"],
+      "properties": {
+        "usesAI": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "userDataSentToModels": { "$ref": "common.schema.json#/$defs/knownBoolean" },
+        "autonomousExternalActions": { "$ref": "common.schema.json#/$defs/knownBoolean" }
+      },
+      "additionalProperties": false
+    },
+    "integrations": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "platformTargets": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/platform" } } },
+      "unevaluatedProperties": false
+    },
+    "geography": {
+      "type": "object",
+      "required": ["markets"],
+      "properties": {
+        "markets": { "$ref": "common.schema.json#/$defs/knownStringList" },
+        "regulatedJurisdictions": { "$ref": "common.schema.json#/$defs/knownStringList" }
+      },
+      "additionalProperties": false
+    },
+    "businessModel": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/businessModel" } } },
+      "unevaluatedProperties": false
+    },
+    "distributionModel": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/distribution" } } },
+      "unevaluatedProperties": false
+    },
+    "growthGoals": { "$ref": "common.schema.json#/$defs/knownStringList" },
+    "capabilityRequests": {
+      "description": "Capabilities the user explicitly asked for (ids from capabilities/registry.json). Requests never bypass phase or consent rules.",
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/capabilityId" } } },
+      "unevaluatedProperties": false
+    },
+    "businessOperations": {
+      "description": "Business Owner Mode discovery inventory. NOT_APPLICABLE for pure product builds.",
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["area", "currentTools", "volumePerMonth", "minutesPerOccurrence", "automatableFraction"],
+            "properties": {
+              "area": { "$ref": "#/$defs/businessArea" },
+              "currentTools": { "$ref": "common.schema.json#/$defs/knownStringList" },
+              "volumePerMonth": { "$ref": "common.schema.json#/$defs/knownNumber" },
+              "minutesPerOccurrence": { "$ref": "common.schema.json#/$defs/knownNumber" },
+              "automatableFraction": {
+                "$ref": "common.schema.json#/$defs/assessment",
+                "properties": { "value": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "unevaluatedProperties": false
+              },
+              "dataSensitivity": {
+                "$ref": "common.schema.json#/$defs/assessment",
+                "properties": { "value": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/dataClass" } } },
+                "unevaluatedProperties": false
+              },
+              "painNote": { "$ref": "common.schema.json#/$defs/untrustedText" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["toolsMonthlyUsd", "aiMonthlyUsd", "hourlyValueUsd"],
+      "properties": {
+        "toolsMonthlyUsd": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "aiMonthlyUsd": { "$ref": "common.schema.json#/$defs/knownNumber" },
+        "hourlyValueUsd": { "$ref": "common.schema.json#/$defs/knownNumber" }
+      },
+      "additionalProperties": false
+    },
+    "riskClassification": {
+      "description": "Computed by a versioned deterministic ruleset, never by free-form AI judgment.",
+      "type": "object",
+      "required": ["level", "factors", "rulesetVersion"],
+      "properties": {
+        "level": {
+          "$ref": "common.schema.json#/$defs/assessment",
+          "properties": { "value": { "enum": ["LOW", "MODERATE", "HIGH", "CRITICAL"] } },
+          "unevaluatedProperties": false
+        },
+        "factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "rationale"],
+            "properties": {
+              "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+              "rationale": { "type": "string", "minLength": 1, "maxLength": 2000 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "rulesetVersion": { "$ref": "common.schema.json#/$defs/semver" }
+      },
+      "additionalProperties": false
+    },
+    "stackRecommendation": {
+      "description": "Reference to a Recommendation (category STACK); not embedded, to avoid duplicated authority.",
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": { "value": { "$ref": "common.schema.json#/$defs/id" } },
+      "unevaluatedProperties": false
+    },
+    "selectedModules": {
+      "$ref": "common.schema.json#/$defs/assessment",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["moduleId", "moduleVersion", "reason"],
+            "properties": {
+              "moduleId": { "$ref": "common.schema.json#/$defs/moduleId" },
+              "moduleVersion": { "$ref": "common.schema.json#/$defs/semver" },
+              "reason": { "enum": ["ALWAYS", "RULE_MATCH", "DEPENDENCY", "USER_ADDED"] },
+              "trace": { "type": "array", "items": { "type": "string", "maxLength": 500 } }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "evidence", "impactIfWrong", "confirmedByUser"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "statement": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "evidence": { "enum": ["INFERRED", "ASSUMED", "UNVERIFIED"] },
+          "impactIfWrong": { "type": "string", "maxLength": 2000 },
+          "confirmedByUser": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unresolvedDecisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "whyItMatters", "blocking"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "question": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "whyItMatters": { "type": "string", "maxLength": 2000 },
+          "blocking": { "type": "boolean", "description": "Blocking decisions prevent export (GENERATION_CONTRACT.md)." },
+          "field": { "type": "string", "maxLength": 100 },
+          "options": { "type": "array", "items": { "type": "string", "maxLength": 300 } },
+          "recommendationId": { "$ref": "common.schema.json#/$defs/id" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "productType": {
+      "enum": [
+        "WEB_SAAS", "MARKETPLACE", "INTERNAL_TOOL", "ECOMMERCE", "DEVELOPER_TOOL", "API_SERVICE", "SDK_LIBRARY",
+        "BROWSER_EXTENSION", "MOBILE_APP", "DESKTOP_APP", "CONTENT_SITE", "REALTIME_APP", "BOT", "AI_AGENT",
+        "DATA_PIPELINE", "GAME_INTERACTIVE", "IOT_COMPANION", "FINANCIAL_TRADING", "OTHER"
+      ]
+    },
+    "lifecycleStage": { "enum": ["IDEA", "VALIDATING", "BUILDING", "LAUNCHED", "GROWING", "EXISTING_RECOVERY"] },
+    "dataClass": { "enum": ["PERSONAL", "SENSITIVE_PERSONAL", "LOCATION", "HEALTH", "FINANCIAL", "PAYMENT_CARD", "CHILDREN", "CREDENTIALS", "USER_GENERATED_CONTENT", "BIOMETRIC_VOICE_LIKENESS"] },
+    "platform": { "enum": ["WEB", "IOS", "ANDROID", "MACOS", "WINDOWS", "LINUX", "BROWSER_EXTENSION", "CLI", "API"] },
+    "businessModel": { "enum": ["FREEMIUM", "TRIAL", "SUBSCRIPTION", "USAGE_CREDITS", "PER_SEAT", "TRANSACTION_FEE", "COMMISSION", "ONE_TIME", "LIFETIME", "ENTERPRISE", "ADS", "SERVICES", "NON_COMMERCIAL"] },
+    "distribution": { "enum": ["SELF_SERVE", "SALES_LED", "APP_STORE", "EXTENSION_STORE", "MARKETPLACE_LISTING", "OPEN_SOURCE", "COMMUNITY", "PARTNER", "LOCAL_OFFLINE"] },
+    "businessArea": {
+      "enum": [
+        "LEADS", "SALES", "CRM", "QUOTING", "SCHEDULING", "EMAIL", "DOCUMENTS", "INVOICING", "PAYMENTS",
+        "CUSTOMER_SUPPORT", "REPORTING", "INVENTORY", "FULFILLMENT", "RECURRING_ADMIN", "APPROVALS", "DATA_ENTRY", "COMPLIANCE_HANDOFFS"
+      ]
+    }
+  }
+}

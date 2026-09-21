@@ -1,0 +1,42 @@
+{
+  "kind": "GateResult",
+  "schemaVersion": "0.1.0",
+  "id": "gate-G0-2026-09-13-cycle0",
+  "gate": "G0",
+  "subject": { "type": "CYCLE", "ref": "Cycle 0 — 1stStep OS foundation" },
+  "result": "PASS",
+  "evaluatedAt": "2026-09-13T06:00:00Z",
+  "evaluator": { "actorType": "AGENT", "actorId": "orchestrator" },
+  "criteria": [
+    {
+      "id": "g0-intent",
+      "description": "Product intent, users, MVP loop and non-goals are captured in canonical files.",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "PROJECT.md (identity, thesis, MVP loop incl. business goal), PRODUCT_REQUIREMENTS.md (P0/P1/P2/LATER, non-goals), plan/SCOPE.md (per-area classification).", "ref": "PROJECT.md; PRODUCT_REQUIREMENTS.md; plan/SCOPE.md" }
+      ]
+    },
+    {
+      "id": "g0-decisions-explicit",
+      "description": "Required but unresolved decisions are recorded as explicit open decisions with default assumptions, not presented as known.",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "ADR-010 open decisions OD-1..OD-10, each with owner, blocking milestone and default assumption; PRD additions marked 'ratify'.", "ref": "architecture/decisions/ADR-010-mvp-application-architecture.md#open-decisions-non-blocking-for-g1-and-scaffold" }
+      ]
+    },
+    {
+      "id": "g0-no-invented-facts",
+      "description": "No external facts are asserted as verified; third-party characteristics are labelled INFERRED/UNVERIFIED.",
+      "result": "PASS",
+      "evidence": [
+        { "state": "OBSERVED", "description": "No web research performed; ADR evidence notes label technology facts INFERRED and prices/limits UNVERIFIED; fixtures are marked as fixtures.", "ref": "architecture/decisions/ADR-010-mvp-application-architecture.md#evidence-note" }
+      ]
+    }
+  ],
+  "blockers": [],
+  "nonBlockingOpenItems": [
+    "Product-owner ratification of PRD additions (business goal intake, premium UX, AI cost control, data rights) is pending.",
+    "Universal LLM Addendum arrived during the cycle (the zip itself is empty; files were copied in directly) and must be reconciled into ADR-012 (F-0024)."
+  ],
+  "ratification": { "state": "PENDING" }
+}

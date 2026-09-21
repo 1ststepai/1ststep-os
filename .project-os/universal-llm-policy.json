@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "principle": "provider-neutral-canonical-core",
+  "supports": [
+    "hosted",
+    "coding-agent",
+    "enterprise-gateway",
+    "local",
+    "self-hosted",
+    "custom"
+  ],
+  "canonicalStatePortable": true
+}

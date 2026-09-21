@@ -1,0 +1,9 @@
+{
+  "name": "@1ststep-os/core",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  }
+}
